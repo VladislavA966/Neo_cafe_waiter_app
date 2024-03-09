@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/data/model/cart_item_model/cart_item_model.dart';
+import 'package:neo_cafe_24/features/new_order_screen/data/model/cart_item_model/cart_item_model.dart';
 
 part 'cart_model.g.dart';
 

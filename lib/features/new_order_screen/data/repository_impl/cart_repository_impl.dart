@@ -1,7 +1,7 @@
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/data/data_source/local/cart_local_data_source.dart';
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/data/model/cart_item_model/cart_item_model.dart';
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/domain/entity/cart_item_entity.dart';
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/domain/repo/cart_repo.dart';
+import 'package:neo_cafe_24/features/new_order_screen/data/data_source/local/cart_local_data_source.dart';
+import 'package:neo_cafe_24/features/new_order_screen/data/model/cart_item_model/cart_item_model.dart';
+import 'package:neo_cafe_24/features/new_order_screen/domain/entity/cart_item_entity.dart';
+import 'package:neo_cafe_24/features/new_order_screen/domain/repo/cart_repo.dart';
 
 class CartRepositoryImpl implements CartRepository {
   final CartLocalDataSource data;

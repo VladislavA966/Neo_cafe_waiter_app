@@ -7,13 +7,12 @@ import 'package:neo_cafe_24/features/auth/domain/use_case/auth_use_case.dart';
 import 'package:neo_cafe_24/features/auth/domain/use_case/send_code_use_case.dart';
 import 'package:neo_cafe_24/features/auth/presentation/controller/auth_bloc/auth_bloc.dart';
 import 'package:neo_cafe_24/features/auth/presentation/view/auth_screen.dart';
-import 'package:neo_cafe_24/features/home_page/presentation/home_page.dart';
 import 'package:neo_cafe_24/features/menu_screen/domain/use_cases/category_use_case.dart';
 import 'package:neo_cafe_24/features/menu_screen/domain/use_cases/menu_items_use_case.dart';
 import 'package:neo_cafe_24/features/menu_screen/presentation/controller/category_bloc/category_bloc.dart';
 import 'package:neo_cafe_24/features/menu_screen/presentation/controller/menu_item/menu_item_bloc.dart';
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/domain/use_case/cart_use_case.dart';
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/presentation/controller/bloc/cart_bloc.dart';
+import 'package:neo_cafe_24/features/new_order_screen/domain/use_case/cart_use_case.dart';
+import 'package:neo_cafe_24/features/new_order_screen/presentation/controller/bloc/cart_bloc.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

@@ -19,90 +19,118 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   final loginController = TextEditingController();
   final passwordController = TextEditingController();
+  void authEvent() {
+    BlocProvider.of<AuthBloc>(context).add(
+      GetAuthEvent(
+        login: loginController.text,
+        password: passwordController.text,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(
-        title: Text(
-          'Вход',
-          style: AppFonts.s32w600.copyWith(
-            color: AppColors.black,
+      appBar: _buildAppBar(),
+      body: _buildBody(context),
+    );
+  }
+
+  Padding _buildBody(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          const SizedBox(height: 48),
+          _buildNameTextField(),
+          const SizedBox(height: 12),
+          _buildPasswordTextField(),
+          const SizedBox(height: 56),
+          _buildCustomButton(context),
+        ],
+      ),
+    );
+  }
+
+  CustomButton _buildCustomButton(BuildContext context) {
+    return CustomButton(
+      title: BlocConsumer<AuthBloc, AuthState>(
+        listener: _authListener,
+        builder: _authBuilder,
+      ),
+      onPressed: () {
+        // final Dio dio = Dio();
+        // final responce = await dio.post(
+        //   'https://tokyo-backender.org.kg/waiter/check-username-login/',
+        //   data: {
+        //     "username": "vlad@vlad.com",
+        //     "password": "4444",
+        //   },
+        // );
+        // if (responce.statusCode == 200 || responce.statusCode == 201) {
+        //   print('object');
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => SendCodeScreen(
+        //         email: "",
+        //       ),
+        //     ),
+        //   );
+        // }
+        authEvent();
+      },
+      height: 48,
+    );
+  }
+
+  Widget _authBuilder(context, state) {
+    if (state is AuthLoading) {
+      return const CircularProgressIndicator();
+    }
+    return Text(
+      'Получить код',
+      style: AppFonts.s16w600.copyWith(
+        color: Colors.white,
+      ),
+    );
+  }
+
+  void _authListener(context, state) {
+    if (state is AuthLoaded) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SendCodeScreen(
+            email: state.email,
           ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          children: [
-            const SizedBox(height: 48),
-            CustomTextField(
-              hintText: 'Введите имя',
-              prefixImage: AppImages.profileTap,
-              controller: loginController,
-            ),
-            const SizedBox(height: 12),
-            CustomTextField(
-              hintText: 'Введите пароль',
-              prefixImage: AppImages.lockIcon,
-              controller: passwordController,
-            ),
-            const SizedBox(height: 56),
-            CustomButton(
-              title: BlocConsumer<AuthBloc, AuthState>(
-                listener: (context, state) {
-                  if (state is AuthLoaded) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SendCodeScreen(
-                          email: state.email,
-                        ),
-                      ),
-                    );
-                  }
-                },
-                builder: (context, state) {
-                  if (state is AuthLoading) {
-                    return const CircularProgressIndicator();
-                  }
-                  return Text(
-                    'Получить код',
-                    style: AppFonts.s16w600.copyWith(
-                      color: Colors.white,
-                    ),
-                  );
-                },
-              ),
-              onPressed: () {
-                // final Dio dio = Dio();
-                // final responce = await dio.post(
-                //   'https://tokyo-backender.org.kg/waiter/check-username-login/',
-                //   data: {
-                //     "username": "vlad@vlad.com",
-                //     "password": "4444",
-                //   },
-                // );
-                // if (responce.statusCode == 200 || responce.statusCode == 201) {
-                //   print('object');
-                //   Navigator.push(
-                //     context,
-                //     MaterialPageRoute(
-                //       builder: (context) => SendCodeScreen(
-                //         email: "",
-                //       ),
-                //     ),
-                //   );
-                // }
-                BlocProvider.of<AuthBloc>(context).add(
-                  GetAuthEvent(
-                    login: loginController.text,
-                    password: passwordController.text,
-                  ),
-                );
-              },
-              height: 48,
-            ),
-          ],
+      );
+    }
+  }
+
+  CustomTextField _buildPasswordTextField() {
+    return CustomTextField(
+      hintText: 'Введите пароль',
+      prefixImage: AppImages.lockIcon,
+      controller: passwordController,
+    );
+  }
+
+  CustomTextField _buildNameTextField() {
+    return CustomTextField(
+      hintText: 'Введите имя',
+      prefixImage: AppImages.profileTap,
+      controller: loginController,
+    );
+  }
+
+  MyAppBar _buildAppBar() {
+    return MyAppBar(
+      title: Text(
+        'Вход',
+        style: AppFonts.s32w600.copyWith(
+          color: AppColors.black,
         ),
       ),
     );

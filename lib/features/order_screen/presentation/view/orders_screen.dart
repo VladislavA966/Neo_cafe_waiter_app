@@ -16,6 +16,14 @@ class OrdersScreen extends StatefulWidget {
 
 class _OrdersScreenState extends State<OrdersScreen> {
   int? currentIndex = 0;
+  List<List<Color>> get acticeColors => const [
+        [AppColors.orange],
+        [AppColors.orange]
+      ];
+  void _currentIndexTap(index) {
+    currentIndex = index;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +49,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
           minWidth: double.infinity,
           minHeight: 48,
           cornerRadius: 100,
-          activeBgColors: const [
-            [AppColors.orange],
-            [AppColors.orange]
-          ],
+          activeBgColors: acticeColors,
           activeFgColor: Colors.white,
           inactiveBgColor: AppColors.grey,
           inactiveFgColor: Colors.black,
@@ -52,10 +57,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
           totalSwitches: 2,
           labels: const ['Столы', 'Заказы'],
           radiusStyle: true,
-          onToggle: (index) {
-            currentIndex = index;
-            setState(() {});
-          },
+          onToggle: _currentIndexTap,
         ),
       ),
     );

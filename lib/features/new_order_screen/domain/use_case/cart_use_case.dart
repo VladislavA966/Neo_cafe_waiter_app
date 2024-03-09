@@ -1,5 +1,5 @@
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/domain/entity/cart_item_entity.dart';
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/domain/repo/cart_repo.dart';
+import 'package:neo_cafe_24/features/new_order_screen/domain/entity/cart_item_entity.dart';
+import 'package:neo_cafe_24/features/new_order_screen/domain/repo/cart_repo.dart';
 
 class CartUseCase {
   final CartRepository repo;

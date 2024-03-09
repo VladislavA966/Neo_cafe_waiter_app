@@ -5,10 +5,11 @@ import 'package:neo_cafe_24/core/recources/app_fonts.dart';
 import 'package:neo_cafe_24/core/recources/app_images.dart';
 import 'package:neo_cafe_24/features/menu_screen/presentation/controller/category_bloc/category_bloc.dart';
 import 'package:neo_cafe_24/features/menu_screen/presentation/controller/menu_item/menu_item_bloc.dart';
+import 'package:neo_cafe_24/features/menu_screen/presentation/widgets/menu_item_container.dart';
+import 'package:neo_cafe_24/features/new_order_screen/presentation/controller/bloc/cart_bloc.dart';
 import 'package:neo_cafe_24/features/notifications_screen/presentation/view/notifications_screen.dart';
 import 'package:neo_cafe_24/features/order_screen/presentation/widgets/toggle_button.dart';
 import 'package:neo_cafe_24/features/profile/presentation/view/profile_screen.dart';
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/presentation/controller/bloc/cart_bloc.dart';
 import 'package:neo_cafe_24/features/widgets/app_bar_button.dart';
 import 'package:neo_cafe_24/features/widgets/custom_app_bar.dart';
 import 'package:neo_cafe_24/features/widgets/search_field.dart';
@@ -67,134 +68,73 @@ class _MenuScreenState extends State<MenuScreen> {
       child: Column(
         children: [
           const SizedBox(height: 48),
-          _buildCategoriesList(),
+          BlocBuilder<CategoryBloc, CategoryState>(
+            builder: _buildCategories,
+          ),
           const SizedBox(height: 16),
           BlocBuilder<MenuItemBloc, MenuItemState>(
-            builder: (context, state) {
-              if (state is MenuItemLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (state is MenuItemLoaded) {
-                return Expanded(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: state.model.length,
-                    itemBuilder: (context, index) => Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: MenuContainer(
-                          name: state.model[index].name,
-                          price: state.model[index].pricePerUnit),
-                    ),
-                  ),
-                );
-              }
-              return const SizedBox();
-            },
+            builder: _menuBuilder,
           ),
         ],
       ),
     );
   }
 
-  BlocBuilder<CategoryBloc, CategoryState> _buildCategoriesList() {
-    return BlocBuilder<CategoryBloc, CategoryState>(
-      builder: (context, state) {
-        if (state is CategoryAllLoaded) {
-          return SizedBox(
-            height: 38,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: state.model.length,
-              itemBuilder: (context, index) {
-                final categoryId = state.model[index].id;
-                Color textColor =
-                    selectedId == categoryId ? Colors.white : Colors.black;
-                Color buttonColor = selectedId == categoryId
-                    ? AppColors.orange
-                    : AppColors.grey;
-                return Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: GestureDetector(
-                    onTap: () {
-                      _onCategorySelected(categoryId);
-                    },
-                    child: ToggleButton(
-                      textColor: textColor,
-                      buttonColor: buttonColor,
-                      name: state.model[index].name,
-                    ),
-                  ),
-                );
-              },
-            ),
-          );
-        } else if (state is CategoryAllError) {
-          Text(state.errorText);
-        }
-        return const SizedBox();
-      },
-    );
-  }
-}
-
-class MenuContainer extends StatelessWidget {
-  final String name;
-  final int price;
-  const MenuContainer({
-    super.key,
-    required this.name,
-    required this.price,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 56,
-      padding: const EdgeInsets.only(
-        top: 19,
-        left: 16,
-        right: 16,
-        bottom: 18,
-      ),
-      clipBehavior: Clip.antiAlias,
-      decoration: ShapeDecoration(
-        color: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+  Widget _buildCategories(context, state) {
+    if (state is CategoryAllLoaded) {
+      return SizedBox(
+        height: 38,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: state.model.length,
+          itemBuilder: (context, index) {
+            final categoryId = state.model[index].id;
+            Color textColor =
+                selectedId == categoryId ? Colors.white : Colors.black;
+            Color buttonColor =
+                selectedId == categoryId ? AppColors.orange : AppColors.grey;
+            return Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: GestureDetector(
+                onTap: () {
+                  _onCategorySelected(categoryId);
+                },
+                child: ToggleButton(
+                  textColor: textColor,
+                  buttonColor: buttonColor,
+                  name: state.model[index].name,
+                ),
+              ),
+            );
+          },
         ),
-        shadows: const [
-          BoxShadow(
-            color: Color(0x0F000000),
-            blurRadius: 8,
-            offset: Offset(0, 4),
-            spreadRadius: 0,
+      );
+    } else if (state is CategoryAllError) {
+      Text(state.errorText);
+    }
+    return const SizedBox();
+  }
+
+  Widget _menuBuilder(context, state) {
+    if (state is MenuItemLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } else if (state is MenuItemLoaded) {
+      return Expanded(
+        child: ListView.builder(
+          shrinkWrap: true,
+          itemCount: state.model.length,
+          itemBuilder: (context, index) => Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: MenuContainer(
+                name: state.model[index].name,
+                price: state.model[index].pricePerUnit),
           ),
-          BoxShadow(
-            color: Color(0x0A000000),
-            blurRadius: 4,
-            offset: Offset(0, 0),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            name,
-            style: AppFonts.s16w600.copyWith(
-              color: AppColors.black,
-            ),
-          ),
-          Text(
-            '$price c',
-            style: AppFonts.s16w600.copyWith(color: AppColors.blue),
-          )
-        ],
-      ),
-    );
+        ),
+      );
+    }
+    return const SizedBox();
   }
 }
 
@@ -212,7 +152,7 @@ Positioned _buildNotificationButton(BuildContext context) {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => NotificationsScreen(),
+              builder: (context) => const NotificationsScreen(),
             ),
           );
         }),

@@ -1,6 +1,6 @@
 import 'package:hive/hive.dart';
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/data/model/cart_item_model/cart_item_model.dart';
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/data/model/cart_model/cart_model.dart';
+import 'package:neo_cafe_24/features/new_order_screen/data/model/cart_item_model/cart_item_model.dart';
+import 'package:neo_cafe_24/features/new_order_screen/data/model/cart_model/cart_model.dart';
 
 abstract class CartLocalDataSource {
   Future<void> addItem(CartItemModel item);

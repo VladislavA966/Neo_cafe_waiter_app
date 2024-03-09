@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
+import 'package:neo_cafe_24/features/new_order_screen/presentation/controller/bloc/cart_bloc.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/widgets/order_item_container.dart';
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/domain/entity/cart_item_entity.dart';
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/presentation/controller/bloc/cart_bloc.dart';
+import 'package:neo_cafe_24/features/new_order_screen/domain/entity/cart_item_entity.dart';
 import 'package:neo_cafe_24/features/widgets/custom_button.dart';
 
 class OrderSummaryModal extends StatelessWidget {

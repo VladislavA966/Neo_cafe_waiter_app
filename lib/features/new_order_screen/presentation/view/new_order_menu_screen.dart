@@ -5,11 +5,11 @@ import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
 import 'package:neo_cafe_24/features/menu_screen/presentation/controller/category_bloc/category_bloc.dart';
 import 'package:neo_cafe_24/features/menu_screen/presentation/controller/menu_item/menu_item_bloc.dart';
+import 'package:neo_cafe_24/features/new_order_screen/presentation/controller/bloc/cart_bloc.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/widgets/order_summary_modal.dart';
 import 'package:neo_cafe_24/features/order_screen/presentation/widgets/new_order_menu_container.dart';
 import 'package:neo_cafe_24/features/order_screen/presentation/widgets/toggle_button.dart';
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/domain/entity/cart_item_entity.dart';
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/presentation/controller/bloc/cart_bloc.dart';
+import 'package:neo_cafe_24/features/new_order_screen/domain/entity/cart_item_entity.dart';
 import 'package:neo_cafe_24/features/widgets/app_bar_button.dart';
 import 'package:neo_cafe_24/features/widgets/custom_app_bar.dart';
 import 'package:neo_cafe_24/features/widgets/custom_button.dart';
@@ -139,16 +139,8 @@ class _NewOrderMenuScreenState extends State<NewOrderMenuScreen> {
                 orderTitle: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      'Заказ №1',
-                      style: AppFonts.s16w600.copyWith(color: Colors.white),
-                    ),
-                    Text(
-                      '$total сом',
-                      style: AppFonts.s16w600.copyWith(
-                        color: Colors.white,
-                      ),
-                    )
+                    _buildOrderNumberTitle(),
+                    _buildSummaryPrice(total)
                   ],
                 ),
               ),
@@ -157,6 +149,22 @@ class _NewOrderMenuScreenState extends State<NewOrderMenuScreen> {
         }
         return const SizedBox();
       },
+    );
+  }
+
+  Text _buildSummaryPrice(double total) {
+    return Text(
+      '$total сом',
+      style: AppFonts.s16w600.copyWith(
+        color: Colors.white,
+      ),
+    );
+  }
+
+  Text _buildOrderNumberTitle() {
+    return Text(
+      'Заказ №1',
+      style: AppFonts.s16w600.copyWith(color: Colors.white),
     );
   }
 
@@ -228,11 +236,11 @@ class _NewOrderMenuScreenState extends State<NewOrderMenuScreen> {
 
   BlocBuilder<CategoryBloc, CategoryState> _buildButtonsList() {
     return BlocBuilder<CategoryBloc, CategoryState>(
-      builder: _buildCategoryList,
+      builder: _categoryList,
     );
   }
 
-  Widget _buildCategoryList(context, state) {
+  Widget _categoryList(context, state) {
     if (state is CategoryAllLoaded) {
       return SizedBox(
         height: 38,

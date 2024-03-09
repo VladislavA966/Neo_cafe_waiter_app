@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
+import 'package:neo_cafe_24/features/notifications_screen/presentation/widgets/notifications_container.dart';
 import 'package:neo_cafe_24/features/widgets/app_bar_button.dart';
 import 'package:neo_cafe_24/features/widgets/custom_app_bar.dart';
 
@@ -25,108 +26,74 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: MyAppBar(
-            title: Text(
-              'Уведомления',
-              style: AppFonts.s24w600.copyWith(
-                color: AppColors.black,
-              ),
-            ),
-          ),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                const SizedBox(height: 24),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    foregroundColor: AppColors.blue,
-                    textStyle: AppFonts.s16w600.copyWith(
-                      color: AppColors.blue,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                  onPressed: () {},
-                  child: const Text(
-                    'Очистить всё',
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: 3,
-                    itemBuilder: buildNotifications,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          appBar: _buildAppBar(),
+          body: _buildBody(),
         ),
-        Positioned(
-          top: 65,
-          left: 16,
-          child: AppBarButton(
-              color: AppColors.blue,
-              icon: const Icon(
-                Icons.arrow_back_ios_new,
-                color: Colors.white,
-              ),
-              onPressed: navigatorPop),
-        ),
+        _buildAppBarbackButton(),
       ],
     );
   }
-}
 
-class NotificationContainer extends StatelessWidget {
-  const NotificationContainer({
-    super.key,
-  });
+  Positioned _buildAppBarbackButton() {
+    return Positioned(
+      top: 65,
+      left: 16,
+      child: AppBarButton(
+          color: AppColors.blue,
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.white,
+          ),
+          onPressed: navigatorPop),
+    );
+  }
 
-  @override
-  Widget build(BuildContext context) {
+  Padding _buildBody() {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: Container(
-        width: double.infinity,
-        height: 80,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: AppColors.black,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          const SizedBox(height: 24),
+          _clearAllButton(),
+          const SizedBox(height: 20),
+          Expanded(
+            child: ListView.builder(
+              itemCount: 3,
+              itemBuilder: buildNotifications,
+            ),
           ),
+        ],
+      ),
+    );
+  }
+
+  TextButton _clearAllButton() {
+    return TextButton(
+      style: TextButton.styleFrom(
+        foregroundColor: AppColors.blue,
+        textStyle: AppFonts.s16w600.copyWith(
+          color: AppColors.blue,
+          decoration: TextDecoration.underline,
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(
-                    'Заказ готов',
-                    style: AppFonts.s16w600.copyWith(
-                      color: AppColors.orange,
-                    ),
-                  ),
-                  const Spacer(),
-                  Text(
-                    '19:02',
-                    style: AppFonts.s16w600.copyWith(
-                      color: AppColors.black,
-                    ),
-                  ),
-                ],
-              ),
-              Text(
-                'Капучино x1, Американо x2, Багровай за...',
-                style: AppFonts.s14w400.copyWith(color: AppColors.black),
-              )
-            ],
-          ),
+      ),
+      onPressed: () {},
+      child: const Text(
+        'Очистить всё',
+      ),
+    );
+  }
+
+  MyAppBar _buildAppBar() {
+    return MyAppBar(
+      title: Text(
+        'Уведомления',
+        style: AppFonts.s24w600.copyWith(
+          color: AppColors.black,
         ),
       ),
     );
   }
 }
+
+

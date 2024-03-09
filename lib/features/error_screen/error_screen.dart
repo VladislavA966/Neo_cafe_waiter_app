@@ -15,29 +15,41 @@ class ErrorScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              AppImages.errorImage,
-            ),
+            _buildImage(),
             const SizedBox(height: 32),
-            Text(
-              'Упс, что-то пошло не так',
-              style: AppFonts.s24w500.copyWith(
-                color: AppColors.black,
-              ),
-            ),
+            _buildTitle(),
             const SizedBox(height: 87),
-            CustomButton(
-                title: Text(
-                  'Обновить',
-                  style: AppFonts.s16w600.copyWith(
-                    color: Colors.white,
-                  ),
-                ),
-                onPressed: () {},
-                height: 54),
+            _buildButton(),
           ],
         ),
       ),
     );
+  }
+
+  CustomButton _buildButton() {
+    return CustomButton(
+              title: Text(
+                'Обновить',
+                style: AppFonts.s16w600.copyWith(
+                  color: Colors.white,
+                ),
+              ),
+              onPressed: () {},
+              height: 54);
+  }
+
+  Text _buildTitle() {
+    return Text(
+            'Упс, что-то пошло не так',
+            style: AppFonts.s24w500.copyWith(
+              color: AppColors.black,
+            ),
+          );
+  }
+
+  Image _buildImage() {
+    return Image.asset(
+            AppImages.errorImage,
+          );
   }
 }

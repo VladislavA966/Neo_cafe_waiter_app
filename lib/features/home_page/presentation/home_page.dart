@@ -5,7 +5,6 @@ import 'package:neo_cafe_24/features/menu_screen/presentation/view/menu_screen.d
 import 'package:neo_cafe_24/features/new_order_screen/presentation/view/tables_new_order_screen.dart';
 import 'package:neo_cafe_24/features/order_screen/presentation/view/orders_screen.dart';
 
-
 class HomePage extends StatefulWidget {
   final int initialIndex;
   const HomePage({
@@ -37,6 +36,21 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  List<BoxShadow> get shadows => const [
+        BoxShadow(
+          color: Color(0x14000000),
+          blurRadius: 4,
+          offset: Offset(0, -2),
+          spreadRadius: 0,
+        ),
+        BoxShadow(
+          color: Color(0x05000000),
+          blurRadius: 6,
+          offset: Offset(0, 0),
+          spreadRadius: 0,
+        )
+      ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,20 +60,7 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x14000000),
-              blurRadius: 4,
-              offset: Offset(0, -2),
-              spreadRadius: 0,
-            ),
-            BoxShadow(
-              color: Color(0x05000000),
-              blurRadius: 6,
-              offset: Offset(0, 0),
-              spreadRadius: 0,
-            )
-          ],
+          boxShadow: shadows,
           borderRadius: BorderRadius.circular(40),
         ),
         child: ClipRRect(

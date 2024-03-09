@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/domain/entity/cart_item_entity.dart';
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/domain/use_case/cart_use_case.dart';
+import 'package:neo_cafe_24/features/new_order_screen/domain/entity/cart_item_entity.dart';
+import 'package:neo_cafe_24/features/new_order_screen/domain/use_case/cart_use_case.dart';
 
 part 'cart_event.dart';
 part 'cart_state.dart';

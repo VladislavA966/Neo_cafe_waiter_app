@@ -3,6 +3,7 @@ import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
 import 'package:neo_cafe_24/core/recources/app_images.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/view/new_order_menu_screen.dart';
+import 'package:neo_cafe_24/features/new_order_screen/presentation/widgets/info_row.dart';
 import 'package:neo_cafe_24/features/widgets/app_bar_button.dart';
 import 'package:neo_cafe_24/features/widgets/custom_app_bar.dart';
 
@@ -14,53 +15,22 @@ class NewOrderTableScreen extends StatefulWidget {
 }
 
 class _NewOrderTableScreenState extends State<NewOrderTableScreen> {
+  void goToCreateNewOrder() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const NewOrderMenuScreen(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Scaffold(
           appBar: _buildAppBar(),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 16),
-                Text(
-                  'Выберите стол',
-                  style: AppFonts.s16w600.copyWith(
-                    color: AppColors.black,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                const Row(
-                  children: [
-                    InfoRow(
-                      color: AppColors.grey,
-                      name: 'Занято',
-                    ),
-                    SizedBox(width: 32),
-                    InfoRow(color: AppColors.green, name: 'Свободно')
-                  ],
-                ),
-                const SizedBox(height: 32),
-                Row(
-                  children: [
-                    TableContainer(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const NewOrderMenuScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+          body: _buildBody(context),
         ),
         _buildAppBarProfileTap(),
         _buildAppBarNotificationTap(),
@@ -68,15 +38,54 @@ class _NewOrderTableScreenState extends State<NewOrderTableScreen> {
     );
   }
 
+  Padding _buildBody(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 16),
+          _tableNumberTitle(),
+          const SizedBox(height: 24),
+          _buildInfoTablesRow(),
+          const SizedBox(height: 32),
+          TableContainer(onTap: goToCreateNewOrder),
+        ],
+      ),
+    );
+  }
+
+  Row _buildInfoTablesRow() {
+    return const Row(
+      children: [
+        InfoRow(
+          color: AppColors.grey,
+          name: 'Занято',
+        ),
+        SizedBox(width: 32),
+        InfoRow(color: AppColors.green, name: 'Свободно')
+      ],
+    );
+  }
+
+  Text _tableNumberTitle() {
+    return Text(
+      'Выберите стол',
+      style: AppFonts.s16w600.copyWith(
+        color: AppColors.black,
+      ),
+    );
+  }
+
   MyAppBar _buildAppBar() {
     return MyAppBar(
-          title: Text(
-            'Новый заказ',
-            style: AppFonts.s24w600.copyWith(
-              color: AppColors.black,
-            ),
-          ),
-        );
+      title: Text(
+        'Новый заказ',
+        style: AppFonts.s24w600.copyWith(
+          color: AppColors.black,
+        ),
+      ),
+    );
   }
 }
 
@@ -85,12 +94,13 @@ Positioned _buildAppBarNotificationTap() {
     top: 65,
     right: 16,
     child: AppBarButton(
-        color: AppColors.blue,
-        icon: const Icon(
-          Icons.notifications_none,
-          color: Colors.white,
-        ),
-        onPressed: () {}),
+      color: AppColors.blue,
+      icon: const Icon(
+        Icons.notifications_none,
+        color: Colors.white,
+      ),
+      onPressed: () {},
+    ),
   );
 }
 
@@ -99,12 +109,13 @@ Positioned _buildAppBarProfileTap() {
     top: 65,
     left: 16,
     child: AppBarButton(
-        color: AppColors.blue,
-        icon: Image.asset(
-          AppImages.profileTap,
-          color: Colors.white,
-        ),
-        onPressed: () {}),
+      color: AppColors.blue,
+      icon: Image.asset(
+        AppImages.profileTap,
+        color: Colors.white,
+      ),
+      onPressed: () {},
+    ),
   );
 }
 
@@ -147,41 +158,6 @@ class TableContainer extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class InfoRow extends StatelessWidget {
-  final Color color;
-  final String name;
-  const InfoRow({
-    super.key,
-    required this.color,
-    required this.name,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 20,
-          height: 20,
-          decoration: ShapeDecoration(
-            color: color,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-        ),
-        const SizedBox(width: 10),
-        Text(
-          name,
-          style: AppFonts.s14w400.copyWith(
-            color: AppColors.black,
-          ),
-        )
-      ],
     );
   }
 }

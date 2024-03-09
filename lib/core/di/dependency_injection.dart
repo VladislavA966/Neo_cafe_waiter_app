@@ -10,10 +10,10 @@ import 'package:neo_cafe_24/features/menu_screen/data/data_source/menu_remote_da
 import 'package:neo_cafe_24/features/menu_screen/data/repository_impl/category_repository_impl.dart';
 import 'package:neo_cafe_24/features/menu_screen/domain/use_cases/category_use_case.dart';
 import 'package:neo_cafe_24/features/menu_screen/domain/use_cases/menu_items_use_case.dart';
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/data/data_source/local/cart_local_data_source.dart';
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/data/model/cart_model/cart_model.dart';
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/data/repository_impl/cart_repository_impl.dart';
-import 'package:neo_cafe_24/features/shopping_cart_screen.dart/domain/use_case/cart_use_case.dart';
+import 'package:neo_cafe_24/features/new_order_screen/data/data_source/local/cart_local_data_source.dart';
+import 'package:neo_cafe_24/features/new_order_screen/data/model/cart_model/cart_model.dart';
+import 'package:neo_cafe_24/features/new_order_screen/data/repository_impl/cart_repository_impl.dart';
+import 'package:neo_cafe_24/features/new_order_screen/domain/use_case/cart_use_case.dart';
 
 final getIt = GetIt.instance;
 
