@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
 import 'package:neo_cafe_24/core/recources/app_images.dart';
+import 'package:neo_cafe_24/features/notifications_screen/presentation/view/notifications_screen.dart';
 import 'package:neo_cafe_24/features/order_screen/presentation/widgets/toggle_button.dart';
+import 'package:neo_cafe_24/features/profile/presentation/view/profile_screen.dart';
 import 'package:neo_cafe_24/features/widgets/app_bar_button.dart';
 import 'package:neo_cafe_24/features/widgets/custom_app_bar.dart';
 import 'package:toggle_switch/toggle_switch.dart';
@@ -33,8 +35,8 @@ class _OrdersScreenState extends State<OrdersScreen> {
           appBar: _buildAppBar(),
           body: currentIndex == 0 ? const TablesBody() : const OrdersBody(),
         ),
-        _buildAppBarProfileTap(),
-        _buildAppBarArrowBackTap(),
+        _buildAppBarProfileTap(context),
+        _buildNotificationButton(context),
         _buildToggleButtons(),
       ],
     );
@@ -63,7 +65,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     );
   }
 
-  Positioned _buildAppBarArrowBackTap() {
+  Positioned _buildNotificationButton(BuildContext context) {
     return Positioned(
       top: 65,
       right: 16,
@@ -73,11 +75,18 @@ class _OrdersScreenState extends State<OrdersScreen> {
             Icons.notifications_none,
             color: Colors.white,
           ),
-          onPressed: () {}),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const NotificationsScreen(),
+              ),
+            );
+          }),
     );
   }
 
-  Positioned _buildAppBarProfileTap() {
+  Positioned _buildAppBarProfileTap(BuildContext context) {
     return Positioned(
       top: 65,
       left: 16,
@@ -87,7 +96,14 @@ class _OrdersScreenState extends State<OrdersScreen> {
             AppImages.profileTap,
             color: Colors.white,
           ),
-          onPressed: () {}),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ProfileScreen(),
+              ),
+            );
+          }),
     );
   }
 

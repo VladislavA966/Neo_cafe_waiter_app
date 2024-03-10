@@ -39,4 +39,5 @@ abstract class AppImages {
   static const String selectedNewOrderTap =
       'assets/images/selected_new_order_tap.png';
   static const String selectedMenuTap = 'assets/images/selected_menu_tap.png';
+  static const String checkImage = 'assets/images/check_image.png';
 }

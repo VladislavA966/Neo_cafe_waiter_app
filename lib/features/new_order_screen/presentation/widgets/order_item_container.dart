@@ -36,28 +36,30 @@ class OrderItemContainer extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '$name ($price с за шт)',
-                    style: AppFonts.s14w600.copyWith(
-                      color: AppColors.black,
+              Flexible(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '$name ($price с за шт)',
+                      style: AppFonts.s14w600.copyWith(
+                        color: AppColors.black,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Коровье молоко',
-                    style: AppFonts.s14w400.copyWith(color: AppColors.black),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Карамельный сироп',
-                    style: AppFonts.s14w400.copyWith(
-                      color: AppColors.black,
+                    const SizedBox(height: 16),
+                    Text(
+                      'Коровье молоко',
+                      style: AppFonts.s14w400.copyWith(color: AppColors.black),
                     ),
-                  )
-                ],
+                    const SizedBox(height: 8),
+                    Text(
+                      'Карамельный сироп',
+                      style: AppFonts.s14w400.copyWith(
+                        color: AppColors.black,
+                      ),
+                    )
+                  ],
+                ),
               ),
               ButtonsRow(
                 counter: quantity,

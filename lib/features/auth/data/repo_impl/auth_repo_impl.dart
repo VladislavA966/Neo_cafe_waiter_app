@@ -14,7 +14,7 @@ class AuthRepoImpl implements AuthRepo {
       {"username": 'vlad@vlad.com', "password": '4444'},
     );
     // await local.saveToken('accessToken', 'refreshToken');
-    await local.saveWaiterEmail(remoteData.email);
+    // await local.saveWaiterEmail(remoteData.email);
     return WaiterEmailEntity(email: remoteData.email);
   }
 

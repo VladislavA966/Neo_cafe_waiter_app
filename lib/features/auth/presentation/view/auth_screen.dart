@@ -20,12 +20,14 @@ class _AuthScreenState extends State<AuthScreen> {
   final loginController = TextEditingController();
   final passwordController = TextEditingController();
   void authEvent() {
-    BlocProvider.of<AuthBloc>(context).add(
-      GetAuthEvent(
-        login: loginController.text,
-        password: passwordController.text,
-      ),
-    );
+    context.read<AuthBloc>().state is AuthLoading
+        ? null
+        : BlocProvider.of<AuthBloc>(context).add(
+            GetAuthEvent(
+              login: loginController.text,
+              password: passwordController.text,
+            ),
+          );
   }
 
   @override

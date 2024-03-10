@@ -4,6 +4,8 @@ import 'package:neo_cafe_24/core/recources/app_fonts.dart';
 import 'package:neo_cafe_24/core/recources/app_images.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/view/new_order_menu_screen.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/widgets/info_row.dart';
+import 'package:neo_cafe_24/features/notifications_screen/presentation/view/notifications_screen.dart';
+import 'package:neo_cafe_24/features/profile/presentation/view/profile_screen.dart';
 import 'package:neo_cafe_24/features/widgets/app_bar_button.dart';
 import 'package:neo_cafe_24/features/widgets/custom_app_bar.dart';
 
@@ -32,8 +34,8 @@ class _NewOrderTableScreenState extends State<NewOrderTableScreen> {
           appBar: _buildAppBar(),
           body: _buildBody(context),
         ),
-        _buildAppBarProfileTap(),
-        _buildAppBarNotificationTap(),
+        _buildAppBarProfileTap(context),
+        _buildNotificationButton(context),
       ],
     );
   }
@@ -89,33 +91,45 @@ class _NewOrderTableScreenState extends State<NewOrderTableScreen> {
   }
 }
 
-Positioned _buildAppBarNotificationTap() {
+Positioned _buildNotificationButton(BuildContext context) {
   return Positioned(
     top: 65,
     right: 16,
     child: AppBarButton(
-      color: AppColors.blue,
-      icon: const Icon(
-        Icons.notifications_none,
-        color: Colors.white,
-      ),
-      onPressed: () {},
-    ),
+        color: AppColors.blue,
+        icon: const Icon(
+          Icons.notifications_none,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const NotificationsScreen(),
+            ),
+          );
+        }),
   );
 }
 
-Positioned _buildAppBarProfileTap() {
+Positioned _buildAppBarProfileTap(BuildContext context) {
   return Positioned(
     top: 65,
     left: 16,
     child: AppBarButton(
-      color: AppColors.blue,
-      icon: Image.asset(
-        AppImages.profileTap,
-        color: Colors.white,
-      ),
-      onPressed: () {},
-    ),
+        color: AppColors.blue,
+        icon: Image.asset(
+          AppImages.profileTap,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ProfileScreen(),
+            ),
+          );
+        }),
   );
 }
 

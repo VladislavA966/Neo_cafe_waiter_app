@@ -19,6 +19,16 @@ class SendCodeScreen extends StatefulWidget {
 }
 
 class _SendCodeScreenState extends State<SendCodeScreen> {
+  void sendCodeEvent() {
+    context.read<AuthBloc>().state is AuthLoading
+        ? null
+        : BlocProvider.of<AuthBloc>(context).add(
+            SendCodeEvent(
+              code: codeController.text,
+            ),
+          );
+  }
+
   void goToNextScreen() {
     Navigator.push(
       context,
