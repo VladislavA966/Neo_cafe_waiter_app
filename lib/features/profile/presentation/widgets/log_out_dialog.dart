@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
-import 'package:neo_cafe_24/features/auth/presentation/view/auth_screen.dart';
 import 'package:neo_cafe_24/features/widgets/custom_button.dart';
 import 'package:neo_cafe_24/features/widgets/opacity_button.dart';
 
@@ -67,7 +66,7 @@ class LogountModalWindow extends StatelessWidget {
     return Expanded(
         child: OpacityButton(
       borderColor: AppColors.blue,
-      onPressed: () {},
+      onPressed: declineTap,
       title: 'Нет',
     ));
   }
