@@ -5,10 +5,12 @@ import 'package:neo_cafe_24/core/recources/app_fonts.dart';
 class InfoRow extends StatelessWidget {
   final Color color;
   final String name;
+  final TextStyle? style;
   const InfoRow({
     super.key,
     required this.color,
     required this.name,
+    this.style = AppFonts.s14w400,
   });
 
   @override
@@ -28,9 +30,7 @@ class InfoRow extends StatelessWidget {
         const SizedBox(width: 10),
         Text(
           name,
-          style: AppFonts.s14w400.copyWith(
-            color: AppColors.black,
-          ),
+          style: style,
         )
       ],
     );

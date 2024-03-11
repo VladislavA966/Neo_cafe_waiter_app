@@ -17,16 +17,29 @@ class OrderItemContainer extends StatelessWidget {
     required this.price,
     required this.quantity,
   });
-
+  List<BoxShadow> get shadows => const [
+        BoxShadow(
+          color: Color(0x14000000),
+          blurRadius: 16,
+          offset: Offset(0, 8),
+          spreadRadius: 0,
+        ),
+        BoxShadow(
+          color: Color(0x0A000000),
+          blurRadius: 4,
+          offset: Offset(0, 0),
+          spreadRadius: 0,
+        )
+      ];
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-        ),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: shadows),
         child: Padding(
           padding: const EdgeInsets.only(
             top: 12,

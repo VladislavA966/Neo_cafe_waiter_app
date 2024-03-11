@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
 import 'package:neo_cafe_24/core/recources/app_images.dart';
+import 'package:neo_cafe_24/features/new_order_screen/presentation/view/tables_new_order_screen.dart';
+import 'package:neo_cafe_24/features/new_order_screen/presentation/widgets/info_row.dart';
 import 'package:neo_cafe_24/features/notifications_screen/presentation/view/notifications_screen.dart';
+import 'package:neo_cafe_24/features/order_info_screen/presentation/view/order_info_screen.dart';
 import 'package:neo_cafe_24/features/order_screen/presentation/widgets/toggle_button.dart';
 import 'package:neo_cafe_24/features/profile/presentation/view/profile_screen.dart';
 import 'package:neo_cafe_24/features/widgets/app_bar_button.dart';
@@ -264,6 +267,38 @@ class TablesBody extends StatefulWidget {
 class _TablesBodyState extends State<TablesBody> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          const SizedBox(height: 48),
+          _buildInfoTablesRow(),
+          const SizedBox(height: 32),
+          TableContainer(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const OrderInfoScreen(),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
   }
+}
+
+Row _buildInfoTablesRow() {
+  return const Row(
+    children: [
+      InfoRow(
+        color: AppColors.grey,
+        name: 'Занято',
+      ),
+      SizedBox(width: 32),
+      InfoRow(color: AppColors.green, name: 'Свободно')
+    ],
+  );
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
 import 'package:neo_cafe_24/core/recources/app_images.dart';
+import 'package:neo_cafe_24/features/auth/presentation/view/auth_screen.dart';
 import 'package:neo_cafe_24/features/profile/presentation/widgets/log_out_dialog.dart';
 import 'package:neo_cafe_24/features/widgets/app_bar_button.dart';
 import 'package:neo_cafe_24/features/widgets/auth_text_field.dart';
@@ -24,7 +25,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
     showDialog(
       context: context,
       builder: (context) {
-        return const LogountModalWindow();
+        return LogountModalWindow(
+          acceptTap: () {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AuthScreen(),
+              ),
+              (Route<dynamic> route) => false,
+            );
+          },
+          title: 'Уверены, что хотите\nвыйти?',
+          declineTap: () {
+            Navigator.pop(context);
+          },
+        );
       },
     );
   }

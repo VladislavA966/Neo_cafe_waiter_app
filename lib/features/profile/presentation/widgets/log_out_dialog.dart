@@ -3,10 +3,17 @@ import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
 import 'package:neo_cafe_24/features/auth/presentation/view/auth_screen.dart';
 import 'package:neo_cafe_24/features/widgets/custom_button.dart';
+import 'package:neo_cafe_24/features/widgets/opacity_button.dart';
 
 class LogountModalWindow extends StatelessWidget {
+  final String title;
+  final Function() acceptTap;
+  final Function() declineTap;
   const LogountModalWindow({
     super.key,
+    required this.title,
+    required this.acceptTap,
+    required this.declineTap,
   });
 
   @override
@@ -25,8 +32,6 @@ class LogountModalWindow extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             _exitTitle(),
-            const SizedBox(height: 16),
-            _quetionTitle(),
             const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -52,15 +57,7 @@ class LogountModalWindow extends StatelessWidget {
             color: Colors.white,
           ),
         ),
-        onPressed: () {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const AuthScreen(),
-            ),
-            (Route<dynamic> route) => false,
-          );
-        },
+        onPressed: acceptTap,
         height: 54,
       ),
     );
@@ -68,32 +65,16 @@ class LogountModalWindow extends StatelessWidget {
 
   Expanded _buildNoButton(BuildContext context) {
     return Expanded(
-      child: CustomButton(
-        title: Text(
-          'Нет',
-          style: AppFonts.s16w600.copyWith(
-            color: Colors.white,
-          ),
-        ),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        height: 54,
-      ),
-    );
-  }
-
-  Text _quetionTitle() {
-    return Text(
-      'Уверены, что хотите выйти?',
-      textAlign: TextAlign.center,
-      style: AppFonts.s14w600.copyWith(color: AppColors.black),
-    );
+        child: OpacityButton(
+      borderColor: AppColors.blue,
+      onPressed: () {},
+      title: 'Нет',
+    ));
   }
 
   Text _exitTitle() {
     return Text(
-      'Выход',
+      title,
       style: AppFonts.s24w600.copyWith(color: AppColors.black),
       textAlign: TextAlign.center,
     );
