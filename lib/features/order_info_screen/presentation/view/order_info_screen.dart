@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
+import 'package:neo_cafe_24/core/recources/app_images.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/widgets/info_row.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/widgets/order_item_container.dart';
 import 'package:neo_cafe_24/features/profile/presentation/widgets/log_out_dialog.dart';
@@ -232,7 +233,29 @@ class CloseOrderModelWindow extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             CustomButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pop(context);
+                showDialog(
+                  context: context,
+                  builder: (context) => Dialog(
+                    child: SizedBox(
+                      height: 176,
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(AppImages.checkImage),
+                          Text(
+                            'Заказ успешно закрыт',
+                            style: AppFonts.s20w600
+                                .copyWith(color: AppColors.black),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
               height: 54,
               title: Text(
                 'Сохранить',

@@ -11,5 +11,7 @@ void main() async {
   final cartBox = await Hive.openBox<CartModel>('cartBox');
   getIt.registerSingleton<Box<CartModel>>(cartBox);
   setUpDependency();
-  runApp(const MyApp());
+  runApp(
+    const MyApp(),
+  );
 }
