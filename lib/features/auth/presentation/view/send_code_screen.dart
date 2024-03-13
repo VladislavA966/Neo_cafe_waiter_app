@@ -117,13 +117,7 @@ class _SendCodeScreenState extends State<SendCodeScreen> {
                     builder: (context) => const HomePage(),
                   ),
                 );
-                // final Dio dio = Dio();
-                // await dio.post(
-                //     'https://tokyo-backender.org.kg/waiter/login/',
-                //     data: {
-                //       "email": "vlad@vlad.com",
-                //       "confirmation_code": "4444"
-                //     });
+                
                 _sendCodeEvent(context);
               },
               height: 52,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
 
 class InfoRow extends StatelessWidget {

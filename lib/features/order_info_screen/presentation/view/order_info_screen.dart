@@ -69,7 +69,7 @@ class _OrderInfoScreenState extends State<OrderInfoScreen> {
                 const SizedBox(height: 16),
                 Expanded(
                   child: ListView.builder(
-                    itemCount: 1,
+                    itemCount: 5,
                     itemBuilder: (context, index) => Padding(
                       padding: const EdgeInsets.only(bottom: 16),
                       child: OrderItemContainer(

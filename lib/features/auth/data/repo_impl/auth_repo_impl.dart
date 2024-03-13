@@ -11,17 +11,21 @@ class AuthRepoImpl implements AuthRepo {
   @override
   Future<WaiterEmailEntity> authRepo(String username, String password) async {
     final remoteData = await remote.authRemote(
-      {"username": 'vlad@vlad.com', "password": '4444'},
+      {"username": username, "password": password},
     );
-    // await local.saveToken('accessToken', 'refreshToken');
-    // await local.saveWaiterEmail(remoteData.email);
+    await local.saveToken('accessToken', 'refreshToken');
+    await local.saveWaiterEmail(remoteData.email);
     return WaiterEmailEntity(email: remoteData.email);
   }
 
   @override
   Future<void> sendCodeRepo(String code) async {
-    // final email = await local.getWaireEmail();
+    final email = await local.getWaireEmail();
     await remote.sendCodeRemote(
-        {"email": 'vlad@vlad.com', "confirmation_code": '4444'});
+      {
+        "email": email,
+        "confirmation_code": code,
+      },
+    );
   }
 }

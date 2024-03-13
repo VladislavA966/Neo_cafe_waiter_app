@@ -5,7 +5,7 @@ import 'package:neo_cafe_24/core/recources/app_fonts.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/controller/bloc/cart_bloc.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/widgets/order_item_container.dart';
 import 'package:neo_cafe_24/features/new_order_screen/domain/entity/cart_item_entity.dart';
-import 'package:neo_cafe_24/features/order_confirmed_screen.dart/presentation/view/order_confirmed_screen.dart';
+import 'package:neo_cafe_24/features/order_confirmed_screen/presentation/view/order_confirmed_screen.dart';
 import 'package:neo_cafe_24/features/widgets/custom_button.dart';
 
 class OrderSummaryModal extends StatelessWidget {
