@@ -11,9 +11,14 @@ import 'package:neo_cafe_24/features/menu_screen/data/repository_impl/category_r
 import 'package:neo_cafe_24/features/menu_screen/domain/use_cases/category_use_case.dart';
 import 'package:neo_cafe_24/features/menu_screen/domain/use_cases/menu_items_use_case.dart';
 import 'package:neo_cafe_24/features/new_order_screen/data/data_source/local/cart_local_data_source.dart';
+import 'package:neo_cafe_24/features/new_order_screen/data/data_source/remote/new_oreder_remote.dart';
+import 'package:neo_cafe_24/features/new_order_screen/data/mapper/item_order_mapper.dart';
+import 'package:neo_cafe_24/features/new_order_screen/data/mapper/table_mapper.dart';
 import 'package:neo_cafe_24/features/new_order_screen/data/model/cart_model/cart_model.dart';
 import 'package:neo_cafe_24/features/new_order_screen/data/repository_impl/cart_repository_impl.dart';
+import 'package:neo_cafe_24/features/new_order_screen/data/repository_impl/order_repository_impl.dart';
 import 'package:neo_cafe_24/features/new_order_screen/domain/use_case/cart_use_case.dart';
+import 'package:neo_cafe_24/features/new_order_screen/domain/use_case/order_use_case.dart';
 
 final getIt = GetIt.instance;
 
@@ -24,9 +29,12 @@ void setUpDependency() {
       getIt<AuthDataSource>(),
     ),
   );
+
   authDependency();
   manuDependency();
   cartDependency();
+  mappers();
+  newOrderDependencies();
 }
 
 //Auth
@@ -89,5 +97,38 @@ void manuDependency() {
     AllItemsUseCase(
       repo: getIt<MenuRepositoryImpl>(),
     ),
+  );
+}
+
+//Order
+void newOrderDependencies() {
+  getIt.registerSingleton<NewOrderRemoteImpl>(
+    NewOrderRemoteImpl(
+      dio: getIt<DioSettings>().dio,
+    ),
+  );
+  getIt.registerSingleton<NewOrderRepositoryImpl>(
+    NewOrderRepositoryImpl(
+      orderRemote: getIt<NewOrderRemoteImpl>(),
+      itemMapper: getIt<ItemOrderMapper>(),
+      tableMapper: getIt<TableMapper>(),
+      cartLocal: getIt<CartLocalDataSourceImpl>(),
+      authLocal: getIt<AuthDataSource>(),
+    ),
+  );
+  getIt.registerSingleton<NewOrderUseCase>(
+    NewOrderUseCase(
+      repo: getIt<NewOrderRepositoryImpl>(),
+    ),
+  );
+}
+
+//Mapper
+void mappers() {
+  getIt.registerSingleton<TableMapper>(
+    TableMapper(),
+  );
+  getIt.registerSingleton<ItemOrderMapper>(
+    ItemOrderMapper(),
   );
 }

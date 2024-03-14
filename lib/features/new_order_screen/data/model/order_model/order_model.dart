@@ -17,7 +17,7 @@ class OrderModel {
   OrderModel(
       {required this.table,
       required this.branch,
-      required this.orderType,
+      this.orderType = 'In Venue',
       required this.ito});
   factory OrderModel.fromJson(Map<String, dynamic> json) =>
       _$OrderModelFromJson(json);
