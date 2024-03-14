@@ -5,7 +5,7 @@ class CustomButton extends StatelessWidget {
   final double height;
   final Widget? orderTitle;
   final double? width;
-  final Function() onPressed;
+  final Function()? onPressed;
   final Color? color;
   final Widget? title;
   const CustomButton({

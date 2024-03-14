@@ -6,7 +6,7 @@ import 'package:neo_cafe_24/core/recources/app_images.dart';
 import 'package:neo_cafe_24/features/menu_screen/presentation/controller/category_bloc/category_bloc.dart';
 import 'package:neo_cafe_24/features/menu_screen/presentation/controller/menu_item/menu_item_bloc.dart';
 import 'package:neo_cafe_24/features/menu_screen/presentation/widgets/menu_item_container.dart';
-import 'package:neo_cafe_24/features/new_order_screen/presentation/controller/bloc/cart_bloc.dart';
+import 'package:neo_cafe_24/features/new_order_screen/presentation/controller/cart_bloc/cart_bloc.dart';
 import 'package:neo_cafe_24/features/notifications_screen/presentation/view/notifications_screen.dart';
 import 'package:neo_cafe_24/features/order_screen/presentation/widgets/toggle_button.dart';
 import 'package:neo_cafe_24/features/profile/presentation/view/profile_screen.dart';

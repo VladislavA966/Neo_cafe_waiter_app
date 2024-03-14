@@ -12,7 +12,9 @@ import 'package:neo_cafe_24/features/menu_screen/domain/use_cases/menu_items_use
 import 'package:neo_cafe_24/features/menu_screen/presentation/controller/category_bloc/category_bloc.dart';
 import 'package:neo_cafe_24/features/menu_screen/presentation/controller/menu_item/menu_item_bloc.dart';
 import 'package:neo_cafe_24/features/new_order_screen/domain/use_case/cart_use_case.dart';
-import 'package:neo_cafe_24/features/new_order_screen/presentation/controller/bloc/cart_bloc.dart';
+import 'package:neo_cafe_24/features/new_order_screen/domain/use_case/order_use_case.dart';
+import 'package:neo_cafe_24/features/new_order_screen/presentation/controller/cart_bloc/cart_bloc.dart';
+import 'package:neo_cafe_24/features/new_order_screen/presentation/controller/new_order_bloc/new_order_bloc.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -40,6 +42,11 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => CartBloc(
             cartUseCase: getIt<CartUseCase>(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => NewOrderBloc(
+            getIt<NewOrderUseCase>(),
           ),
         ),
       ],
