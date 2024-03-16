@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
 import 'package:neo_cafe_24/core/recources/app_images.dart';
-import 'package:neo_cafe_24/features/new_order_screen/presentation/view/new_order_menu_screen.dart';
+import 'package:neo_cafe_24/features/new_order_screen/presentation/view/new_order_screen/new_order_menu_screen.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/widgets/info_row.dart';
 import 'package:neo_cafe_24/features/notifications_screen/presentation/view/notifications_screen.dart';
 import 'package:neo_cafe_24/features/profile/presentation/view/profile_screen.dart';

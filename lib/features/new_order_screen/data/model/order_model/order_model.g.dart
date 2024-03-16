@@ -9,7 +9,7 @@ part of 'order_model.dart';
 OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
       table: TableModel.fromJson(json['table'] as Map<String, dynamic>),
       branch: json['branch'] as int,
-      orderType: json['order_type'] as String,
+      orderType: json['order_type'] as String? ?? 'In Venue',
       ito: (json['ITO'] as List<dynamic>)
           .map((e) => ItemOrderModel.fromJson(e as Map<String, dynamic>))
           .toList(),

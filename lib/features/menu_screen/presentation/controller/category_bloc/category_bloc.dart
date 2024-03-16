@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:neo_cafe_24/features/menu_screen/domain/entity/category_entity.dart';
@@ -9,24 +10,23 @@ part 'category_state.dart';
 class CategoryBloc extends Bloc<CategoryEvent, CategoryState> {
   final CategoryUseCase getAllCategories;
   CategoryBloc(this.getAllCategories) : super(CategoryInitial()) {
-    getAllCategoriesEvent();
+    on<GetAllCategoriesEvent>(_getAllCategoryEvent);
   }
 
-  void getAllCategoriesEvent() {
-    return on<GetAllCategoriesEvent>((event, emit) async {
-      emit(CategoryAllLoading());
-      try {
-        final model = await getAllCategories.call(
-          NoParams(),
-        );
-        emit(CategoryAllLoaded(model: model));
-      } catch (e) {
-        emit(
-          CategoryAllError(
-            errorText: e.toString(),
-          ),
-        );
-      }
-    });
+  FutureOr<void> _getAllCategoryEvent(
+      GetAllCategoriesEvent event, Emitter<CategoryState> emit) async {
+    emit(CategoryAllLoading());
+    try {
+      final model = await getAllCategories.call(
+        NoParams(),
+      );
+      emit(CategoryAllLoaded(model: model));
+    } catch (e) {
+      emit(
+        CategoryAllError(
+          errorText: e.toString(),
+        ),
+      );
+    }
   }
 }

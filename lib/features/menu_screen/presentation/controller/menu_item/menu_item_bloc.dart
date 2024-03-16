@@ -9,26 +9,22 @@ part 'menu_item_state.dart';
 class MenuItemBloc extends Bloc<MenuItemEvent, MenuItemState> {
   final AllItemsUseCase getAllitems;
   MenuItemBloc(this.getAllitems) : super(MenuItemInitial()) {
-    getAllItemsEvent();
+    on<GetAllItemsEvent>(_getAllItemsEvent);
   }
-
-  void getAllItemsEvent() {
-    return on<GetAllItemsEvent>(
-      (event, emit) async {
-        emit(MenuItemLoading());
-        try {
-          final model = await getAllitems(CategoryParams(id: event.id));
-          emit(
-            MenuItemLoaded(model: model),
-          );
-        } catch (e) {
-          emit(
-            MenuItemError(
-              errorText: e.toString(),
-            ),
-          );
-        }
-      },
-    );
+  void _getAllItemsEvent(
+      GetAllItemsEvent event, Emitter<MenuItemState> emit) async {
+    emit(MenuItemLoading());
+    try {
+      final model = await getAllitems(CategoryParams(id: event.id));
+      emit(
+        MenuItemLoaded(model: model),
+      );
+    } catch (e) {
+      emit(
+        MenuItemError(
+          errorText: e.toString(),
+        ),
+      );
+    }
   }
 }

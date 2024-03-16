@@ -53,55 +53,75 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Stack(
       children: [
         Scaffold(
-          appBar: MyAppBar(
-            title: Text(
-              'Профиль',
-              style: AppFonts.s24w600.copyWith(color: AppColors.black),
-            ),
-          ),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 48),
-                Text(
-                  'Имя',
-                  style: AppFonts.s16w400.copyWith(color: AppColors.blue),
-                ),
-                CustomTextField(
-                  hintText: 'Алихандро',
-                  prefixImage: AppImages.profileTap,
-                  controller: TextEditingController(),
-                ),
-                const SizedBox(height: 40),
-                Center(
-                  child: Text(
-                    'График работы',
-                    style: AppFonts.s24w600.copyWith(
-                      color: AppColors.black,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Expanded(
-                  child: ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: rows.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 20),
-                          child: rows[index],
-                        );
-                      }),
-                )
-              ],
-            ),
-          ),
+          appBar: _buildAppBar(),
+          body: _buildBody(),
         ),
         _buildArrowBackButton(context),
         _buildLogoutButton(context)
       ],
+    );
+  }
+
+  Padding _buildBody() {
+    return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 48),
+              _buildNameTitle(),
+              _buildName(),
+              const SizedBox(height: 40),
+              _buildWorkingTime(),
+              const SizedBox(height: 20),
+              Expanded(
+                child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: rows.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: rows[index],
+                      );
+                    }),
+              )
+            ],
+          ),
+        );
+  }
+
+  Center _buildWorkingTime() {
+    return Center(
+      child: Text(
+        'График работы',
+        style: AppFonts.s24w600.copyWith(
+          color: AppColors.black,
+        ),
+      ),
+    );
+  }
+
+  CustomTextField _buildName() {
+    return CustomTextField(
+      hintText: 'Алихандро',
+      prefixImage: AppImages.profileTap,
+      controller: TextEditingController(),
+    );
+  }
+
+  Text _buildNameTitle() {
+    return Text(
+      'Имя',
+      style: AppFonts.s16w400.copyWith(color: AppColors.blue),
+    );
+  }
+
+  MyAppBar _buildAppBar() {
+    return MyAppBar(
+      title: Text(
+        'Профиль',
+        style: AppFonts.s24w600.copyWith(color: AppColors.black),
+      ),
     );
   }
 

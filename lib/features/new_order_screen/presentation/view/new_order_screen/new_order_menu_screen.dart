@@ -211,7 +211,7 @@ class _NewOrderMenuScreenState extends State<NewOrderMenuScreen> {
               if (itemCount == 0) {
                 addItemToCart(id, name, image, price, 1);
               } else {
-                removeItemFromCart(currentItem?.id ?? 1);
+                 removeItemFromCart(currentItem?.id ?? 1);
               }
             },
             child: Icon(

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:neo_cafe_24/features/auth/domain/use_case/auth_use_case.dart';
@@ -11,42 +12,50 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SendCodeUseCase codeUseCase;
   AuthBloc(this.authUseCase, this.codeUseCase) : super(AuthInitial()) {
     on<GetAuthEvent>(
-      (event, emit) async {
-        emit(AuthLoading());
-        try {
-          final email = await authUseCase.call(
-            AuthParams(
-              login: event.login,
-              password: event.password,
-            ),
-          );
-          emit(
-            AuthLoaded(email: email.email),
-          );
-        } catch (e) {
-          emit(
-            AuthError(
-              errorText: e.toString(),
-            ),
-          );
-        }
-      },
+      _getAuthEvent,
     );
-    on<SendCodeEvent>((event, emit) async {
-      emit(AuthLoading());
-      try {
-        await codeUseCase.call(
-          SendCodeParams(
-            code: event.code,
-          ),
-        );
-      } catch (e) {
-        emit(
-          AuthError(
-            errorText: e.toString(),
-          ),
-        );
-      }
-    });
+    on<SendCodeEvent>(
+      _sendCodeEvent,
+    );
+  }
+
+  Future<void> _sendCodeEvent(
+      SendCodeEvent event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    try {
+      await codeUseCase.call(
+        SendCodeParams(
+          code: event.code,
+        ),
+      );
+    } catch (e) {
+      emit(
+        AuthError(
+          errorText: e.toString(),
+        ),
+      );
+    }
+  }
+
+  Future<void> _getAuthEvent(
+      GetAuthEvent event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    try {
+      final email = await authUseCase.call(
+        AuthParams(
+          login: event.login,
+          password: event.password,
+        ),
+      );
+      emit(
+        AuthLoaded(email: email.email),
+      );
+    } catch (e) {
+      emit(
+        AuthError(
+          errorText: e.toString(),
+        ),
+      );
+    }
   }
 }
