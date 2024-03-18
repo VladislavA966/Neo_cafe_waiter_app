@@ -26,7 +26,7 @@ class OrderSummaryModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final orderState = context.read<NewOrderBloc>().state;
-    TableEntity table = TableEntity(tableId: 1, tableStatus: "ads");
+    final table = TableEntity(id: 1, tableNumbe: 1, isAvailable: true, branch: 1);
     final bloc = BlocProvider.of<CartBloc>(context);
     return Container(
       width: double.infinity,
@@ -104,7 +104,7 @@ class OrderSummaryModal extends StatelessWidget {
                       }
                       BlocProvider.of<NewOrderBloc>(context).add(
                         SendNewOrderEvent(
-                          table: table,
+                          table: table ,
                         ),
                       );
                     },

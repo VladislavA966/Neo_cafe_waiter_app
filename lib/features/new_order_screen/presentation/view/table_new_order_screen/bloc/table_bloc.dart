@@ -16,7 +16,7 @@ class TableBloc extends Bloc<TableEvent, TableState> {
     );
   }
 
-  FutureOr<void> _getAllTablesEvent(
+  Future<void> _getAllTablesEvent(
       GetAllTablesEvent event, Emitter<TableState> emit) async {
     emit(TableLoading());
     try {

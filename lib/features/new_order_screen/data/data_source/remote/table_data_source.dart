@@ -13,7 +13,7 @@ class TableRemoteImpl implements TableRemote {
   @override
   Future<List<TableModel>> getAllTables() async {
     final response = await dio.get(
-      '/table/',
+      '/tables/branch/1',
     );
     if (response.statusCode == 201 || response.statusCode == 200) {
       List<dynamic> jsonData = response.data;

@@ -274,16 +274,16 @@ class _TablesBodyState extends State<TablesBody> {
           const SizedBox(height: 48),
           _buildInfoTablesRow(),
           const SizedBox(height: 32),
-          TableContainer(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const OrderInfoScreen(),
-                ),
-              );
-            },
-          ),
+          // TableContainer(
+          //   onTap: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //         builder: (context) => const OrderInfoScreen(),
+          //       ),
+          //     );
+          //   },
+          // ),
         ],
       ),
     );

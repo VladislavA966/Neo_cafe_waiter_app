@@ -1,6 +1,12 @@
 class TableEntity {
-  final int tableId;
-  final String tableStatus;
+  final int id;
+  final int tableNumbe;
+  final bool isAvailable;
+  final int branch;
 
-  TableEntity({required this.tableId, required this.tableStatus});
+  TableEntity(
+      {required this.id,
+      required this.tableNumbe,
+      required this.isAvailable,
+      required this.branch});
 }

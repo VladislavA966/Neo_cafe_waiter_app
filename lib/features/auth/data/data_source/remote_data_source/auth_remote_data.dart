@@ -9,6 +9,6 @@ abstract class AuthRemote {
 
   @POST('/waiter/check-username-login/')
   Future<WaiterEmailModel> authRemote(@Body() Map<String, dynamic> data);
-  @POST('/waiter/login/')
+  @POST('/waiter/login')
   Future<void> sendCodeRemote(@Body() Map<String, dynamic> data);
 }

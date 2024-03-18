@@ -5,6 +5,11 @@ import 'package:neo_cafe_24/features/new_order_screen/domain/entity/table_entity
 class TableMapper extends Mapper<TableEntity, TableModel> {
   @override
   TableModel mapper(TableEntity model) {
-    return TableModel(tableNumber: model.tableId, status: model.tableStatus);
+    return TableModel(
+      id: model.id,
+      tableNumber: model.tableNumbe,
+      isAvailable: model.isAvailable,
+      branch: model.branch,
+    );
   }
 }

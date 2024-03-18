@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
 import 'package:neo_cafe_24/core/recources/app_images.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/view/new_order_screen/new_order_menu_screen.dart';
+import 'package:neo_cafe_24/features/new_order_screen/presentation/view/table_new_order_screen/bloc/table_bloc.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/widgets/info_row.dart';
 import 'package:neo_cafe_24/features/notifications_screen/presentation/view/notifications_screen.dart';
 import 'package:neo_cafe_24/features/profile/presentation/view/profile_screen.dart';
@@ -27,12 +29,37 @@ class _NewOrderTableScreenState extends State<NewOrderTableScreen> {
   }
 
   @override
+  void initState() {
+    BlocProvider.of<TableBloc>(context).add(
+      GetAllTablesEvent(),
+    );
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double padding = 16.0 * 2;
+    double spacing = 10.0;
+    int crossAxisCount = 2;
+
+    double totalSpacing = spacing * (crossAxisCount - 1) + padding;
+    double itemWidth = (screenWidth - totalSpacing) / crossAxisCount;
+    double itemHeight = 200.0;
+
+    double childAspectRatio = itemWidth / itemHeight;
     return Stack(
       children: [
         Scaffold(
           appBar: _buildAppBar(),
-          body: _buildBody(context),
+          body: BlocBuilder<TableBloc, TableState>(
+            builder: (context, state) {
+              if (state is TableLoaded) {
+                return _buildBody(context, childAspectRatio, state);
+              }
+              return const SizedBox();
+            },
+          ),
         ),
         _buildAppBarProfileTap(context),
         _buildNotificationButton(context),
@@ -40,7 +67,8 @@ class _NewOrderTableScreenState extends State<NewOrderTableScreen> {
     );
   }
 
-  Padding _buildBody(BuildContext context) {
+  Padding _buildBody(
+      BuildContext context, double childAspectRatio, TableLoaded state) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -51,7 +79,26 @@ class _NewOrderTableScreenState extends State<NewOrderTableScreen> {
           const SizedBox(height: 24),
           _buildInfoTablesRow(),
           const SizedBox(height: 32),
-          TableContainer(onTap: goToCreateNewOrder),
+          Expanded(
+            child: GridView.builder(
+              shrinkWrap: true,
+            
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 0,
+                mainAxisSpacing: 0,
+                childAspectRatio: (childAspectRatio),
+              ),
+              itemCount: state.tables.length,
+              itemBuilder: (BuildContext context, int index) {
+                return TableContainer(
+                  onTap: () {},
+                  tableNumber: state.tables[index].tableNumbe,
+                  isAvailable: state.tables[index].isAvailable,
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -135,39 +182,40 @@ Positioned _buildAppBarProfileTap(BuildContext context) {
 
 class TableContainer extends StatelessWidget {
   final Function()? onTap;
+  final int tableNumber;
+  final bool isAvailable;
 
-  const TableContainer({
-    super.key,
-    this.onTap,
-  });
+  const TableContainer(
+      {super.key,
+      required this.onTap,
+      required this.tableNumber,
+      required this.isAvailable});
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.only(
-          left: 4,
-          right: 4,
-          bottom: 8,
-        ),
-        child: GestureDetector(
-          onTap: onTap,
-          child: Container(
-            width: double.infinity,
-            height: 100,
-            padding: const EdgeInsets.symmetric(vertical: 21),
-            clipBehavior: Clip.antiAlias,
-            decoration: ShapeDecoration(
-              color: AppColors.grey,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 4,
+        right: 4,
+        bottom: 8,
+      ),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: double.infinity,
+          height: 100,
+          padding: const EdgeInsets.symmetric(vertical: 21),
+          clipBehavior: Clip.antiAlias,
+          decoration: ShapeDecoration(
+            color: isAvailable ? AppColors.grey : AppColors.green,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: const Center(
-              child: Text(
-                '1',
-                style: AppFonts.s48w400,
-              ),
+          ),
+          child: Center(
+            child: Text(
+              "$tableNumber",
+              style: AppFonts.s48w400,
             ),
           ),
         ),

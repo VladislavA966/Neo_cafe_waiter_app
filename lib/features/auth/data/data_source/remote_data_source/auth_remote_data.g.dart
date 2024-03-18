@@ -60,7 +60,7 @@ class _AuthRemote implements AuthRemote {
     )
         .compose(
           _dio.options,
-          '/waiter/login/',
+          '/waiter/login',
           queryParameters: queryParameters,
           data: _data,
         )

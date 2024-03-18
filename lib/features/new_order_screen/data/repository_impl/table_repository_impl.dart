@@ -10,10 +10,11 @@ class TableRepositoryImpl implements TableRepo {
   Future<List<TableEntity>> getAllTables() async {
     final tablesRemote = await remote.getAllTables();
     final tablesEntity = tablesRemote
-        .map(
-          (table) => TableEntity(
-              tableId: table.tableNumber, tableStatus: table.status),
-        )
+        .map((table) => TableEntity(
+            id: table.id,
+            tableNumbe: table.tableNumber,
+            isAvailable: table.isAvailable,
+            branch: table.branch))
         .toList();
     return tablesEntity;
   }
@@ -22,7 +23,10 @@ class TableRepositoryImpl implements TableRepo {
   Future<TableEntity> getCurrentTable(int id) async {
     final tableRemote = await remote.getCurrentTable(id);
     final tableEntity = TableEntity(
-        tableId: tableRemote.tableNumber, tableStatus: tableRemote.status);
+        id: tableRemote.id,
+        tableNumbe: tableRemote.tableNumber,
+        isAvailable: tableRemote.isAvailable,
+        branch: tableRemote.branch);
 
     return tableEntity;
   }

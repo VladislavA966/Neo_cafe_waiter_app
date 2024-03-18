@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
-import 'package:neo_cafe_24/core/recources/app_images.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/widgets/info_row.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/widgets/order_item_container.dart';
 import 'package:neo_cafe_24/features/order_info_screen/presentation/widgets/close_order_modal.dart';

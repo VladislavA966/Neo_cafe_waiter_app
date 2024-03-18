@@ -12,12 +12,16 @@ import 'package:neo_cafe_24/features/menu_screen/domain/use_cases/category_use_c
 import 'package:neo_cafe_24/features/menu_screen/domain/use_cases/menu_items_use_case.dart';
 import 'package:neo_cafe_24/features/new_order_screen/data/data_source/local/cart_local_data_source.dart';
 import 'package:neo_cafe_24/features/new_order_screen/data/data_source/remote/new_oreder_remote.dart';
+import 'package:neo_cafe_24/features/new_order_screen/data/data_source/remote/table_data_source.dart';
 import 'package:neo_cafe_24/features/new_order_screen/data/mapper/item_order_mapper.dart';
 import 'package:neo_cafe_24/features/new_order_screen/data/mapper/table_mapper.dart';
 import 'package:neo_cafe_24/features/new_order_screen/data/model/cart_model/cart_model.dart';
 import 'package:neo_cafe_24/features/new_order_screen/data/repository_impl/cart_repository_impl.dart';
 import 'package:neo_cafe_24/features/new_order_screen/data/repository_impl/order_repository_impl.dart';
+import 'package:neo_cafe_24/features/new_order_screen/data/repository_impl/table_repository_impl.dart';
+import 'package:neo_cafe_24/features/new_order_screen/domain/use_case/all_tables_use_case.dart';
 import 'package:neo_cafe_24/features/new_order_screen/domain/use_case/cart_use_case.dart';
+import 'package:neo_cafe_24/features/new_order_screen/domain/use_case/current_table_use_case.dart';
 import 'package:neo_cafe_24/features/new_order_screen/domain/use_case/order_use_case.dart';
 
 final getIt = GetIt.instance;
@@ -35,6 +39,7 @@ void setUpDependency() {
   cartDependency();
   mappers();
   newOrderDependencies();
+  tableDependencies();
 }
 
 //Auth
@@ -119,6 +124,30 @@ void newOrderDependencies() {
   getIt.registerSingleton<NewOrderUseCase>(
     NewOrderUseCase(
       repo: getIt<NewOrderRepositoryImpl>(),
+    ),
+  );
+}
+
+//Table
+void tableDependencies() {
+  getIt.registerSingleton<TableRemoteImpl>(
+    TableRemoteImpl(
+      dio: getIt<DioSettings>().dio,
+    ),
+  );
+  getIt.registerSingleton<TableRepositoryImpl>(
+    TableRepositoryImpl(
+      remote: getIt<TableRemoteImpl>(),
+    ),
+  );
+  getIt.registerSingleton<AllTableUseCase>(
+    AllTableUseCase(
+      repo: getIt<TableRepositoryImpl>(),
+    ),
+  );
+  getIt.registerSingleton<CurrentTableUseCase>(
+    CurrentTableUseCase(
+      repo: getIt<TableRepositoryImpl>(),
     ),
   );
 }

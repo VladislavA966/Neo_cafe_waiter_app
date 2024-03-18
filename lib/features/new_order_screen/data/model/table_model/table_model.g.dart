@@ -7,12 +7,16 @@ part of 'table_model.dart';
 // **************************************************************************
 
 TableModel _$TableModelFromJson(Map<String, dynamic> json) => TableModel(
+      id: json['id'] as int,
       tableNumber: json['table_number'] as int,
-      status: json['status'] as String,
+      isAvailable: json['is_available'] as bool,
+      branch: json['branch'] as int,
     );
 
 Map<String, dynamic> _$TableModelToJson(TableModel instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'table_number': instance.tableNumber,
-      'status': instance.status,
+      'is_available': instance.isAvailable,
+      'branch': instance.branch,
     };
