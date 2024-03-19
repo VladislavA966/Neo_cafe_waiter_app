@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
 import 'package:neo_cafe_24/core/recources/app_images.dart';
+import 'package:neo_cafe_24/features/new_order_screen/domain/entity/table_entity.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/view/new_order_screen/new_order_menu_screen.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/view/table_new_order_screen/bloc/table_bloc.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/widgets/info_row.dart';
@@ -19,11 +20,13 @@ class NewOrderTableScreen extends StatefulWidget {
 }
 
 class _NewOrderTableScreenState extends State<NewOrderTableScreen> {
-  void goToCreateNewOrder() {
+  void goToCreateNewOrder(TableEntity table) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const NewOrderMenuScreen(),
+        builder: (context) => NewOrderMenuScreen(
+          table: table,
+        ),
       ),
     );
   }
@@ -82,7 +85,6 @@ class _NewOrderTableScreenState extends State<NewOrderTableScreen> {
           Expanded(
             child: GridView.builder(
               shrinkWrap: true,
-            
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 crossAxisSpacing: 0,
@@ -92,7 +94,11 @@ class _NewOrderTableScreenState extends State<NewOrderTableScreen> {
               itemCount: state.tables.length,
               itemBuilder: (BuildContext context, int index) {
                 return TableContainer(
-                  onTap: () {},
+                  onTap: () {
+                    goToCreateNewOrder(
+                      state.tables[index],
+                    );
+                  },
                   tableNumber: state.tables[index].tableNumbe,
                   isAvailable: state.tables[index].isAvailable,
                 );

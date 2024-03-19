@@ -14,21 +14,22 @@ class NewOrderRepositoryImpl implements NewOrderRepo {
   final ItemOrderMapper itemMapper;
   final TableMapper tableMapper;
 
-  NewOrderRepositoryImpl(
-      {required this.orderRemote,
-      required this.itemMapper,
-      required this.tableMapper,
-      required this.cartLocal,
-      required this.authLocal});
+  NewOrderRepositoryImpl({
+    required this.orderRemote,
+    required this.itemMapper,
+    required this.tableMapper,
+    required this.cartLocal,
+    required this.authLocal,
+  });
 
   @override
   Future<void> sendNewOrder(TableEntity table) async {
     final items = await cartLocal.getItems();
     final orderItems = itemMapper.mapper(items);
-
+    final branchId = await authLocal.getBranchId();
     final order = OrderModel(
       table: tableMapper.mapper(table),
-      branch: 1,
+      branch: branchId ?? 1,
       ito: orderItems,
     );
     await orderRemote.sendNewOrder(order);

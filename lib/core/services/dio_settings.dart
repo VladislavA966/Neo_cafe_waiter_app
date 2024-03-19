@@ -1,4 +1,6 @@
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:neo_cafe_24/features/auth/data/data_source/local_data_source/local_data_source.dart';
 
 class DioSettings {
@@ -26,9 +28,9 @@ class DioSettings {
       requestBody: true,
       responseBody: true,
     );
-
+    final cookieJar = CookieJar();
+    interceptors.add(CookieManager(cookieJar));
     interceptors.add(logInterceptor);
-
     interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {

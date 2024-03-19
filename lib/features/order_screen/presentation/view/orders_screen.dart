@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
 import 'package:neo_cafe_24/core/recources/app_images.dart';
+import 'package:neo_cafe_24/features/error_screen/error_screen.dart';
+import 'package:neo_cafe_24/features/new_order_screen/presentation/view/table_new_order_screen/bloc/table_bloc.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/view/table_new_order_screen/tables_new_order_screen.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/widgets/info_row.dart';
 import 'package:neo_cafe_24/features/notifications_screen/presentation/view/notifications_screen.dart';
-import 'package:neo_cafe_24/features/order_info_screen/presentation/view/order_info_screen.dart';
+import 'package:neo_cafe_24/features/order_screen/presentation/controller/bloc/all_orders_bloc.dart';
 import 'package:neo_cafe_24/features/order_screen/presentation/widgets/toggle_button.dart';
 import 'package:neo_cafe_24/features/profile/presentation/view/profile_screen.dart';
 import 'package:neo_cafe_24/features/widgets/app_bar_button.dart';
@@ -23,11 +26,19 @@ class _OrdersScreenState extends State<OrdersScreen> {
   int? currentIndex = 0;
   List<List<Color>> get acticeColors => const [
         [AppColors.orange],
-        [AppColors.orange]
+        [AppColors.orange],
       ];
   void _currentIndexTap(index) {
     currentIndex = index;
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    BlocProvider.of<AllOrdersBloc>(context).add(
+      GetAllOrders(),
+    );
+    super.initState();
   }
 
   @override
@@ -134,64 +145,117 @@ class _OrdersBodyState extends State<OrdersBody> {
   int? selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          const SizedBox(height: 48),
-          SizedBox(
-            height: 38,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: buttonNames.length,
-              itemBuilder: (context, index) {
-                Color textColor =
-                    selectedIndex == index ? Colors.white : Colors.black;
-                Color buttonColor =
-                    selectedIndex == index ? AppColors.orange : AppColors.grey;
-                return Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: GestureDetector(
-                    onTap: () {
-                      selectedIndex = index;
-                      setState(() {});
+    return BlocConsumer<AllOrdersBloc, AllOrdersState>(
+      listener: (context, state) {
+        if (state is AllOrdersError) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ErrorScreen(),
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state is AllOrdersLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is AllOrdersLoaded) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
+                const SizedBox(height: 48),
+                SizedBox(
+                  height: 38,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: buttonNames.length,
+                    itemBuilder: (context, index) {
+                      Color textColor =
+                          selectedIndex == index ? Colors.white : Colors.black;
+                      Color buttonColor = selectedIndex == index
+                          ? AppColors.orange
+                          : AppColors.grey;
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: GestureDetector(
+                          onTap: () {
+                            selectedIndex = index;
+                            setState(() {});
+                          },
+                          child: ToggleButton(
+                            textColor: textColor,
+                            buttonColor: buttonColor,
+                            name: buttonNames[index],
+                          ),
+                        ),
+                      );
                     },
-                    child: ToggleButton(
-                      textColor: textColor,
-                      buttonColor: buttonColor,
-                      name: buttonNames[index],
-                    ),
                   ),
-                );
-              },
+                ),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: state.orders.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: OrderContainer(
+                          status: state.orders[index].orderStatus,
+                          createdAt: state.orders[index].createdAt,
+                          orderNumber: state.orders[index].orderType,
+                          tableNumber:
+                              state.orders[index].table?.tableNumbe ?? 0,
+                        ),
+                      );
+                    },
+                  ),
+                )
+              ],
             ),
-          ),
-          const SizedBox(height: 20),
-          Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return const Padding(
-                  padding: EdgeInsets.only(bottom: 12),
-                  child: OrderContainer(),
-                );
-              },
-            ),
-          )
-        ],
-      ),
+          );
+        } else if (state is AllOrdersError) {
+          return Center(
+            child: Text(state.errorText),
+          );
+        }
+        return const SizedBox();
+      },
     );
   }
 }
 
 class OrderContainer extends StatelessWidget {
+  final String status;
+  final int tableNumber;
+  final String orderNumber;
+  final String createdAt;
   const OrderContainer({
     super.key,
+    required this.status,
+    required this.createdAt,
+    required this.orderNumber,
+    required this.tableNumber,
   });
 
   @override
   Widget build(BuildContext context) {
+    Color getColorForStatus(String status) {
+      switch (status) {
+        case 'New':
+          return Colors.lightBlue;
+        case 'In Progress':
+          return AppColors.yellow;
+        case 'Done':
+          return AppColors.green;
+        default:
+          return Colors.blue;
+      }
+    }
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -207,7 +271,7 @@ class OrderContainer extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  'Стол №1',
+                  'Стол №$tableNumber',
                   style: AppFonts.s20w600.copyWith(
                     color: AppColors.black,
                   ),
@@ -228,7 +292,7 @@ class OrderContainer extends StatelessWidget {
                   width: 16,
                   height: 16,
                   decoration: ShapeDecoration(
-                    color: AppColors.yellow,
+                    color: getColorForStatus(status),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -236,14 +300,14 @@ class OrderContainer extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  'В процессе',
+                  status,
                   style: AppFonts.s16w400.copyWith(
                     color: AppColors.black,
                   ),
                 ),
                 const Spacer(),
                 Text(
-                  '19:02',
+                  createdAt,
                   style: AppFonts.s16w600.copyWith(
                     color: AppColors.black,
                   ),
@@ -267,6 +331,32 @@ class TablesBody extends StatefulWidget {
 class _TablesBodyState extends State<TablesBody> {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double padding = 16.0 * 2;
+    double spacing = 10.0;
+    int crossAxisCount = 2;
+
+    double totalSpacing = spacing * (crossAxisCount - 1) + padding;
+    double itemWidth = (screenWidth - totalSpacing) / crossAxisCount;
+    double itemHeight = 200.0;
+
+    double childAspectRatio = itemWidth / itemHeight;
+    return BlocConsumer<TableBloc, TableState>(
+      listener: (context, state) {
+        tableErrorState(state, context);
+      },
+      builder: (context, state) {
+        if (state is TableLoaded) {
+          return _tableLoadedState(childAspectRatio, state);
+        } else if (state is TableLoading) {
+          return loadingState();
+        }
+        return const SizedBox();
+      },
+    );
+  }
+
+  Padding _tableLoadedState(double childAspectRatio, TableLoaded state) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -274,19 +364,48 @@ class _TablesBodyState extends State<TablesBody> {
           const SizedBox(height: 48),
           _buildInfoTablesRow(),
           const SizedBox(height: 32),
-          // TableContainer(
-          //   onTap: () {
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(
-          //         builder: (context) => const OrderInfoScreen(),
-          //       ),
-          //     );
-          //   },
-          // ),
+          Expanded(
+            child: GridView.builder(
+              shrinkWrap: true,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 0,
+                mainAxisSpacing: 0,
+                childAspectRatio: (childAspectRatio),
+              ),
+              itemCount: state.tables.length,
+              itemBuilder: (BuildContext context, int index) =>
+                  _buildTableContainer(state, index),
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  TableContainer _buildTableContainer(TableLoaded state, int index) {
+    return TableContainer(
+      onTap: () {},
+      tableNumber: state.tables[index].tableNumbe,
+      isAvailable: state.tables[index].isAvailable,
+    );
+  }
+
+  Center loadingState() {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  void tableErrorState(TableState state, BuildContext context) {
+    if (state is TableError) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ErrorScreen(),
+        ),
+      );
+    }
   }
 }
 

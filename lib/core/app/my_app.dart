@@ -17,6 +17,8 @@ import 'package:neo_cafe_24/features/new_order_screen/domain/use_case/order_use_
 import 'package:neo_cafe_24/features/new_order_screen/presentation/controller/cart_bloc/cart_bloc.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/controller/new_order_bloc/new_order_bloc.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/view/table_new_order_screen/bloc/table_bloc.dart';
+import 'package:neo_cafe_24/features/order_screen/domain/use_case/orders_list_use_case.dart';
+import 'package:neo_cafe_24/features/order_screen/presentation/controller/bloc/all_orders_bloc.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -54,6 +56,11 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => TableBloc(
             getIt<AllTableUseCase>(),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => AllOrdersBloc(
+            getIt<OrdersListUseCase>(),
           ),
         ),
       ],

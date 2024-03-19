@@ -111,13 +111,6 @@ class _SendCodeScreenState extends State<SendCodeScreen> {
                 builder: _authBuilder,
               ),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const HomePage(),
-                  ),
-                );
-                
                 _sendCodeEvent(context);
               },
               height: 52,
@@ -149,7 +142,14 @@ class _SendCodeScreenState extends State<SendCodeScreen> {
   }
 
   void _authListener(context, state) {
-    if (state is CodeLoaded) {}
+    if (state is CodeLoaded) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomePage(),
+        ),
+      );
+    }
   }
 
   Pinput _buildPinPut(PinTheme defaultPinTheme, PinTheme focusedPinTheme,

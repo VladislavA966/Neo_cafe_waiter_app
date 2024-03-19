@@ -5,6 +5,7 @@ import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
 import 'package:neo_cafe_24/features/menu_screen/presentation/controller/category_bloc/category_bloc.dart';
 import 'package:neo_cafe_24/features/menu_screen/presentation/controller/menu_item/menu_item_bloc.dart';
+import 'package:neo_cafe_24/features/new_order_screen/domain/entity/table_entity.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/controller/cart_bloc/cart_bloc.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/widgets/order_summary_modal.dart';
 import 'package:neo_cafe_24/features/order_screen/presentation/widgets/new_order_menu_container.dart';
@@ -16,7 +17,8 @@ import 'package:neo_cafe_24/features/widgets/custom_button.dart';
 import 'package:neo_cafe_24/features/widgets/search_field.dart';
 
 class NewOrderMenuScreen extends StatefulWidget {
-  const NewOrderMenuScreen({super.key});
+  final TableEntity table;
+  const NewOrderMenuScreen({super.key, required this.table});
 
   @override
   State<NewOrderMenuScreen> createState() => _NewOrderMenuScreenState();
@@ -30,9 +32,6 @@ class _NewOrderMenuScreenState extends State<NewOrderMenuScreen> {
     BlocProvider.of<CategoryBloc>(context).add(
       GetAllCategoriesEvent(),
     );
-    // BlocProvider.of<MenuItemBloc>(context).add(
-    //   GetAllItemsEvent(id: selectedId),
-    // );
 
     super.initState();
   }
@@ -211,7 +210,7 @@ class _NewOrderMenuScreenState extends State<NewOrderMenuScreen> {
               if (itemCount == 0) {
                 addItemToCart(id, name, image, price, 1);
               } else {
-                 removeItemFromCart(currentItem?.id ?? 1);
+                removeItemFromCart(currentItem?.id ?? 1);
               }
             },
             child: Icon(

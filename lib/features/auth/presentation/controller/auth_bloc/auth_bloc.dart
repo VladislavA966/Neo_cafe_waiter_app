@@ -21,12 +21,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _sendCodeEvent(
       SendCodeEvent event, Emitter<AuthState> emit) async {
-    emit(AuthLoading());
+    emit(
+      AuthLoading(),
+    );
     try {
       await codeUseCase.call(
         SendCodeParams(
           code: event.code,
         ),
+      );
+      emit(
+        CodeLoaded(),
       );
     } catch (e) {
       emit(

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:neo_cafe_24/features/auth/data/data_source/local_data_source/local_data_source.dart';
 import 'package:neo_cafe_24/features/new_order_screen/data/model/table_model/table_model.dart';
 
 abstract class TableRemote {
@@ -8,12 +9,14 @@ abstract class TableRemote {
 
 class TableRemoteImpl implements TableRemote {
   final Dio dio;
+  final AuthDataSource local;
 
-  TableRemoteImpl({required this.dio});
+  TableRemoteImpl({required this.dio, required this.local});
   @override
   Future<List<TableModel>> getAllTables() async {
+    final branchId = await local.getBranchId();
     final response = await dio.get(
-      '/tables/branch/1',
+      '/tables/branch/$branchId',
     );
     if (response.statusCode == 201 || response.statusCode == 200) {
       List<dynamic> jsonData = response.data;

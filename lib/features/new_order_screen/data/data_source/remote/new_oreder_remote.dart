@@ -14,6 +14,9 @@ class NewOrderRemoteImpl implements NewOrderRemote {
     await dio.get(
       '/orders/add/',
       queryParameters: order.toJson(),
+      options: Options(
+        extra: {"requiresToken": true},
+      ),
     );
   }
 }
