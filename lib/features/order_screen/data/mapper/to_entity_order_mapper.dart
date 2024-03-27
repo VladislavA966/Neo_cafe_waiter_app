@@ -13,6 +13,7 @@ class OrderToEntityMapper extends Mapper<OrderInfoModel, OrderInfoEntity> {
   OrderInfoEntity mapper(OrderInfoModel model) {
     return OrderInfoEntity(
       id: model.id ?? 0,
+      orderNumber: model.orderNumber ?? 0,
       table: model.table != null ? tableMapper.mapper(model.table!) : null,
       orderStatus: model.orderStatus ?? '',
       createdAt: model.createdAt ?? '',

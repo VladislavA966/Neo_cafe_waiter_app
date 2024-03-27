@@ -11,6 +11,7 @@ TokenModel _$TokenModelFromJson(Map<String, dynamic> json) => TokenModel(
       refreshToken: json['refresh_token'] as String,
       accessToken: json['access_token'] as String,
       branchId: json['branch_id'] as int,
+      userId: json['user_id'] as int,
     );
 
 Map<String, dynamic> _$TokenModelToJson(TokenModel instance) =>
@@ -19,4 +20,5 @@ Map<String, dynamic> _$TokenModelToJson(TokenModel instance) =>
       'refresh_token': instance.refreshToken,
       'access_token': instance.accessToken,
       'branch_id': instance.branchId,
+      'user_id': instance.userId,
     };

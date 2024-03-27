@@ -19,4 +19,16 @@ final class AuthError extends AuthState {
   AuthError({required this.errorText});
 }
 
+final class LoginValidationError extends AuthState {
+  final String errorText;
+
+  LoginValidationError({required this.errorText});
+}
+
+final class PasswordValidationError extends AuthState {
+  final String errorText;
+
+  PasswordValidationError({required this.errorText});
+}
+
 final class CodeLoaded extends AuthState {}

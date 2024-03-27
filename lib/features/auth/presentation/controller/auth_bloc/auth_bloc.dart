@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
+import 'package:neo_cafe_24/core/services/validation.dart';
 import 'package:neo_cafe_24/features/auth/domain/use_case/auth_use_case.dart';
 import 'package:neo_cafe_24/features/auth/domain/use_case/send_code_use_case.dart';
 
 part 'auth_event.dart';
 part 'auth_state.dart';
 
-class AuthBloc extends Bloc<AuthEvent, AuthState> {
+class AuthBloc extends Bloc<AuthEvent, AuthState> with ValidationMixin {
   final AuthUseCase authUseCase;
   final SendCodeUseCase codeUseCase;
   AuthBloc(this.authUseCase, this.codeUseCase) : super(AuthInitial()) {
@@ -44,6 +45,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _getAuthEvent(
       GetAuthEvent event, Emitter<AuthState> emit) async {
+    // if (!validateLogin(event.login)) {
+    //   emit(
+    //     LoginValidationError(errorText: 'Поле не может быть пустным'),
+    //   );
+    //   return;
+    // } else if (!validatePassword(event.password)) {
+    //   emit(PasswordValidationError(errorText: 'Поле не может быть пустным'));
+    //   return;
+    // }
     emit(AuthLoading());
     try {
       final email = await authUseCase.call(
@@ -58,7 +68,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } catch (e) {
       emit(
         AuthError(
-          errorText: e.toString(),
+          errorText: "Неверный логин или пароль",
         ),
       );
     }

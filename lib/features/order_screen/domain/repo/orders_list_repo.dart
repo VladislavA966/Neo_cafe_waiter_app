@@ -2,4 +2,5 @@ import 'package:neo_cafe_24/features/order_screen/domain/entity/order_info_entit
 
 abstract class OrdersListRepo {
   Future<List<OrderInfoEntity>> getOrders();
+  Future<OrderInfoEntity> getOrderInfo(int table);
 }

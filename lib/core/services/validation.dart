@@ -1,8 +1,17 @@
-mixin EmailValidatorMixin {
-  bool isValidEmail(String email) {
-    final emailRegExp = RegExp(
-      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$',
-    );
-    return emailRegExp.hasMatch(email);
+mixin ValidationMixin {
+  bool validateLogin(String login) {
+    if (login.isEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool validatePassword(String password) {
+    if (password.isEmpty) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

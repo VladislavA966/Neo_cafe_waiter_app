@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:neo_cafe_24/features/auth/data/data_source/local_data_source/local_data_source.dart';
 import 'package:neo_cafe_24/features/menu_screen/data/models/category/category_model.dart';
 import 'package:neo_cafe_24/features/menu_screen/data/models/menu_item_model.dart/menu_all_item_model.dart';
 
@@ -8,10 +9,10 @@ abstract class MenuRemote {
 }
 
 class MenuRemoteImpl implements MenuRemote {
-  // final BranchLocalData local;
+  final AuthDataSource local;
   final Dio dio;
 
-  MenuRemoteImpl({required this.dio});
+  MenuRemoteImpl({required this.dio, required this.local});
   @override
   Future<List<CategoryModel>> getAllCategories() async {
     final response = await dio.get(
@@ -29,9 +30,9 @@ class MenuRemoteImpl implements MenuRemote {
 
   @override
   Future<List<ItemModel>> getAllItems(int categoyID) async {
-    // final branchId = await local.getBranchId();
+    final branchId = await local.getBranchId();
     final responce = await dio.get(
-      '/branch-menu/1/$categoyID/',
+      '/branch-menu/$branchId/$categoyID/',
     );
     List<dynamic> jsonData = responce.data;
     List<ItemModel> items =

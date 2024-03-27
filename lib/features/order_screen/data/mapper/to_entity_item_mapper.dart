@@ -8,6 +8,7 @@ class ToEntityItemMapper extends Mapper<ItemToOrderModel, ItemToOrderEntity> {
     return ItemToOrderEntity(
       id: model.id ?? 0,
       item: model.item ?? 0,
+      itemName: model.itemName,
       quantity: model.quantity ?? 0,
       totalPrice: model.totalPrice ?? 0,
     );

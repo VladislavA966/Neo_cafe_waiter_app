@@ -19,6 +19,12 @@ class AuthScreen extends StatefulWidget {
 class _AuthScreenState extends State<AuthScreen> {
   final loginController = TextEditingController();
   final passwordController = TextEditingController();
+  String? loginError;
+  String? passwordError;
+  String? errorText;
+  String _loginHint = 'Введите имя';
+  String _passwordHint = 'Введите пароль';
+
   void authEvent() {
     context.read<AuthBloc>().state is AuthLoading
         ? null
@@ -61,25 +67,6 @@ class _AuthScreenState extends State<AuthScreen> {
         builder: _authBuilder,
       ),
       onPressed: () {
-        // final Dio dio = Dio();
-        // final responce = await dio.post(
-        //   'https://tokyo-backender.org.kg/waiter/check-username-login/',
-        //   data: {
-        //     "username": "vlad@vlad.com",
-        //     "password": "4444",
-        //   },
-        // );
-        // if (responce.statusCode == 200 || responce.statusCode == 201) {
-        //   print('object');
-        //   Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //       builder: (context) => SendCodeScreen(
-        //         email: "",
-        //       ),
-        //     ),
-        //   );
-        // }
         authEvent();
       },
       height: 48,
@@ -108,20 +95,35 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
         ),
       );
+    } else if (state is LoginValidationError) {
+      loginError = state.errorText;
+      setState(() {});
+    } else if (state is PasswordValidationError) {
+      passwordError = state.errorText;
+      setState(() {});
+    } else if (state is AuthError) {
+      errorText = '';
+      _loginHint = 'Неверный логин или пароль';
+      _passwordHint = 'Неверный логин или пароль';
+      loginController.text = '';
+      passwordController.text = '';
+      setState(() {});
     }
   }
 
   CustomTextField _buildPasswordTextField() {
     return CustomTextField(
-      hintText: 'Введите пароль',
+      hintText: _passwordHint,
       prefixImage: AppImages.lockIcon,
       controller: passwordController,
+      errorText: errorText,
     );
   }
 
   CustomTextField _buildNameTextField() {
     return CustomTextField(
-      hintText: 'Введите имя',
+      errorText: errorText,
+      hintText: _loginHint,
       prefixImage: AppImages.profileTap,
       controller: loginController,
     );

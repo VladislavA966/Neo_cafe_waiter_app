@@ -9,6 +9,7 @@ part of 'order_info_model.dart';
 OrderInfoModel _$OrderInfoModelFromJson(Map<String, dynamic> json) =>
     OrderInfoModel(
       id: json['id'] as int?,
+      orderNumber: json['order_number'] as int?,
       table: json['table'] == null
           ? null
           : TableModel.fromJson(json['table'] as Map<String, dynamic>),
@@ -28,6 +29,7 @@ OrderInfoModel _$OrderInfoModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$OrderInfoModelToJson(OrderInfoModel instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'order_number': instance.orderNumber,
       'table': instance.table,
       'order_status': instance.orderStatus,
       'created_at': instance.createdAt,
@@ -44,6 +46,7 @@ ItemToOrderModel _$ItemToOrderModelFromJson(Map<String, dynamic> json) =>
     ItemToOrderModel(
       id: json['id'] as int?,
       item: json['item'] as int?,
+      itemName: json['item_name'] as String,
       quantity: json['quantity'] as int?,
       totalPrice: json['total_price'] as int?,
     );
@@ -52,6 +55,7 @@ Map<String, dynamic> _$ItemToOrderModelToJson(ItemToOrderModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'item': instance.item,
+      'item_name': instance.itemName,
       'quantity': instance.quantity,
       'total_price': instance.totalPrice,
     };

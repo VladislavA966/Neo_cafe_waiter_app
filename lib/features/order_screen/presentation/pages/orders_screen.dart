@@ -8,6 +8,7 @@ import 'package:neo_cafe_24/features/new_order_screen/presentation/view/table_ne
 import 'package:neo_cafe_24/features/new_order_screen/presentation/view/table_new_order_screen/tables_new_order_screen.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/widgets/info_row.dart';
 import 'package:neo_cafe_24/features/notifications_screen/presentation/view/notifications_screen.dart';
+import 'package:neo_cafe_24/features/order_info_screen/presentation/view/order_info_screen.dart';
 import 'package:neo_cafe_24/features/order_screen/presentation/controller/bloc/all_orders_bloc.dart';
 import 'package:neo_cafe_24/features/order_screen/presentation/widgets/toggle_button.dart';
 import 'package:neo_cafe_24/features/profile/presentation/view/profile_screen.dart';
@@ -245,11 +246,11 @@ class OrderContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     Color getColorForStatus(String status) {
       switch (status) {
-        case 'New':
+        case 'Новый':
           return Colors.lightBlue;
-        case 'In Progress':
+        case 'В процессе':
           return AppColors.yellow;
-        case 'Done':
+        case 'Завершен':
           return AppColors.green;
         default:
           return Colors.blue;
@@ -385,10 +386,27 @@ class _TablesBodyState extends State<TablesBody> {
 
   TableContainer _buildTableContainer(TableLoaded state, int index) {
     return TableContainer(
-      onTap: () {},
+      onTap: () => state.tables[index].isAvailable
+          ? null
+          : _goToTableOrderInfoScreen(state, index),
       tableNumber: state.tables[index].tableNumbe,
       isAvailable: state.tables[index].isAvailable,
     );
+  }
+
+  void _goToTableOrderInfoScreen(TableLoaded state, int index) {
+    if (state.tables[index].isAvailable) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OrderInfoScreen(
+            tableNumber: state.tables[index].tableNumbe,
+          ),
+        ),
+      );
+    } else {
+      null;
+    }
   }
 
   Center loadingState() {

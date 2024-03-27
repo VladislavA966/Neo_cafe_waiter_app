@@ -28,7 +28,13 @@ import 'package:neo_cafe_24/features/order_screen/data/mapper/to_entity_item_map
 import 'package:neo_cafe_24/features/order_screen/data/mapper/to_entity_order_mapper.dart';
 import 'package:neo_cafe_24/features/order_screen/data/mapper/to_entity_table_mapper.dart';
 import 'package:neo_cafe_24/features/order_screen/data/repository_impl/orders_list_repo_impl.dart';
+import 'package:neo_cafe_24/features/order_screen/domain/use_case/order_info_use_case.dart';
 import 'package:neo_cafe_24/features/order_screen/domain/use_case/orders_list_use_case.dart';
+import 'package:neo_cafe_24/features/profile/data/data_source/profile_remote.dart';
+import 'package:neo_cafe_24/features/profile/data/mapper/profile_mapper.dart';
+import 'package:neo_cafe_24/features/profile/data/mapper/schedile_mapper.dart';
+import 'package:neo_cafe_24/features/profile/data/repository_impl/profile_repo_impl.dart';
+import 'package:neo_cafe_24/features/profile/domain/use_cases/profile_use_case.dart';
 
 final getIt = GetIt.instance;
 
@@ -47,6 +53,7 @@ void setUpDependency() {
   newOrderDependencies();
   tableDependencies();
   ordersList();
+  profileDependency();
 }
 
 //Auth
@@ -91,6 +98,7 @@ void cartDependency() {
 void manuDependency() {
   getIt.registerSingleton<MenuRemoteImpl>(
     MenuRemoteImpl(
+      local: getIt<AuthDataSource>(),
       dio: getIt<DioSettings>().dio,
       // local: getIt<BranchLocalData>(),
     ),
@@ -165,17 +173,45 @@ void ordersList() {
   getIt.registerSingleton<OrdersListRomoteImpl>(
     OrdersListRomoteImpl(
       dio: getIt<DioSettings>().dio,
+      local: getIt<AuthDataSource>(),
     ),
   );
   getIt.registerSingleton<OrdersListRepoImpl>(
     OrdersListRepoImpl(
       remote: getIt<OrdersListRomoteImpl>(),
       orderMapper: getIt<OrderToEntityMapper>(),
+      itemMapper: getIt<ToEntityItemMapper>(),
     ),
   );
   getIt.registerSingleton<OrdersListUseCase>(
     OrdersListUseCase(
       repo: getIt<OrdersListRepoImpl>(),
+    ),
+  );
+  getIt.registerSingleton<OrderInfoUseCase>(
+    OrderInfoUseCase(
+      repo: getIt<OrdersListRepoImpl>(),
+    ),
+  );
+}
+
+//Profile
+void profileDependency() {
+  getIt.registerSingleton<ProfileRemoteDataImpl>(
+    ProfileRemoteDataImpl(
+      dio: getIt<DioSettings>().dio,
+      localData: getIt<AuthDataSource>(),
+    ),
+  );
+  getIt.registerSingleton<ProfileRepoImpl>(
+    ProfileRepoImpl(
+      profileRemote: getIt<ProfileRemoteDataImpl>(),
+      profileMapper: getIt<ProfileMapper>(),
+    ),
+  );
+  getIt.registerSingleton<ProfileUseCase>(
+    ProfileUseCase(
+      repo: getIt<ProfileRepoImpl>(),
     ),
   );
 }
@@ -198,6 +234,14 @@ void mappers() {
     OrderToEntityMapper(
       itemMapper: getIt<ToEntityItemMapper>(),
       tableMapper: getIt<ToEntityTableMapper>(),
+    ),
+  );
+  getIt.registerSingleton<ShceduleMapper>(
+    ShceduleMapper(),
+  );
+  getIt.registerSingleton<ProfileMapper>(
+    ProfileMapper(
+      scheduleMapper: getIt<ShceduleMapper>(),
     ),
   );
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
 import 'package:neo_cafe_24/core/recources/app_images.dart';
 import 'package:neo_cafe_24/features/auth/presentation/view/auth_screen.dart';
+import 'package:neo_cafe_24/features/profile/presentation/view/bloc/profile_bloc.dart';
 import 'package:neo_cafe_24/features/profile/presentation/widgets/log_out_dialog.dart';
 import 'package:neo_cafe_24/features/widgets/app_bar_button.dart';
 import 'package:neo_cafe_24/features/widgets/auth_text_field.dart';
@@ -49,12 +51,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   @override
+  void initState() {
+    BlocProvider.of<ProfileBloc>(context).add(
+      GetProfileInfoEvent(),
+    );
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Scaffold(
           appBar: _buildAppBar(),
-          body: _buildBody(),
+          body: BlocBuilder<ProfileBloc, ProfileState>(
+            builder: (context, state) {
+              if (state is ProfileLoading) {
+                print(state);
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (state is ProfileLoaded) {
+                print(state);
+                return _buildBody(state);
+              }
+              return const SizedBox();
+            },
+          ),
         ),
         _buildArrowBackButton(context),
         _buildLogoutButton(context)
@@ -62,32 +85,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Padding _buildBody() {
+  Padding _buildBody(ProfileLoaded state) {
     return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 48),
-              _buildNameTitle(),
-              _buildName(),
-              const SizedBox(height: 40),
-              _buildWorkingTime(),
-              const SizedBox(height: 20),
-              Expanded(
-                child: ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: rows.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 20),
-                        child: rows[index],
-                      );
-                    }),
-              )
-            ],
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 48),
+          _buildNameTitle(),
+          _buildName(state),
+          const SizedBox(height: 40),
+          _buildWorkingTime(),
+          const SizedBox(height: 20),
+          Expanded(
+            child: ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: state.profile.employeeSchedules.length,
+              itemBuilder: (context, index) {
+                return Text(
+                  '${state.profile.employeeSchedules[index].day}: ${state.profile.employeeSchedules[index].startTime} - ${state.profile.employeeSchedules[index].endTime}',
+                  style: AppFonts.s16w400.copyWith(
+                    color: AppColors.black,
+                  ),
+                );
+              },
+            ),
           ),
-        );
+        ],
+      ),
+    );
   }
 
   Center _buildWorkingTime() {
@@ -101,9 +127,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  CustomTextField _buildName() {
+  CustomTextField _buildName(ProfileLoaded state) {
     return CustomTextField(
-      hintText: 'Алихандро',
+      hintText: state.profile.firstName,
+      enabled: false,
       prefixImage: AppImages.profileTap,
       controller: TextEditingController(),
     );

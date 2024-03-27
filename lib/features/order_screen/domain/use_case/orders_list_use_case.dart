@@ -10,4 +10,5 @@ class OrdersListUseCase extends UseCase<List<OrderInfoEntity>, void> {
   Future<List<OrderInfoEntity>> call(void params) async {
     return await repo.getOrders();
   }
+  
 }

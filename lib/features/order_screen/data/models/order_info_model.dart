@@ -7,6 +7,8 @@ part 'order_info_model.g.dart';
 class OrderInfoModel {
   @JsonKey(name: "id")
   final int? id;
+  @JsonKey(name: "order_number")
+  final int? orderNumber;
   @JsonKey(name: "table")
   final TableModel? table;
   @JsonKey(name: "order_status")
@@ -33,6 +35,7 @@ class OrderInfoModel {
 
   OrderInfoModel(
       {required this.id,
+      required this.orderNumber,
       required this.table,
       required this.orderStatus,
       required this.createdAt,
@@ -52,6 +55,8 @@ class ItemToOrderModel {
   final int? id;
   @JsonKey(name: "item")
   final int? item;
+  @JsonKey(name: "item_name")
+  final String itemName;
   @JsonKey(name: "quantity")
   final int? quantity;
   @JsonKey(name: "total_price")
@@ -60,6 +65,7 @@ class ItemToOrderModel {
   ItemToOrderModel({
     required this.id,
     required this.item,
+    required this.itemName,
     required this.quantity,
     required this.totalPrice,
   });

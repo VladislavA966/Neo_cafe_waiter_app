@@ -29,9 +29,7 @@ class AuthRemoteImpl extends AuthRemote {
   @override
   Future<TokenModel> sendCode(String confirmationCode) async {
     final csrfToken = await local.getScrfToken();
-    print('достал токен');
     final email = await local.getWaireEmail();
-    print('достал почту');
     final responce = await dio.post(
       '/waiter/login/',
       data: {
@@ -44,17 +42,13 @@ class AuthRemoteImpl extends AuthRemote {
         },
       ),
     );
-    print('запрос прошел');
     final model = TokenModel.fromJson(responce.data);
-    print('распарсил модельку');
     if (responce.statusCode == 200 || responce.statusCode == 201) {
       await local.saveToken(
         model.accessToken,
         model.refreshToken,
       );
-      print('сохранил токены');
-      await local.saveBranchId(model.branchId);
-      print('сохранил айди филиала');
+      await local.saveBranchId(model.branchId, model.userId);
       return model;
     } else {
       throw Exception();

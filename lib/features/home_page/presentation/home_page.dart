@@ -3,7 +3,7 @@ import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_images.dart';
 import 'package:neo_cafe_24/features/menu_screen/presentation/view/menu_screen.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/view/table_new_order_screen/tables_new_order_screen.dart';
-import 'package:neo_cafe_24/features/order_screen/presentation/view/orders_screen.dart';
+import 'package:neo_cafe_24/features/order_screen/presentation/pages/orders_screen.dart';
 
 class HomePage extends StatefulWidget {
   final int initialIndex;

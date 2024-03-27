@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/widgets/info_row.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/widgets/order_item_container.dart';
+import 'package:neo_cafe_24/features/order_info_screen/presentation/view/bloc/order_info_bloc.dart';
 import 'package:neo_cafe_24/features/order_info_screen/presentation/widgets/close_order_modal.dart';
 import 'package:neo_cafe_24/features/profile/presentation/widgets/log_out_dialog.dart';
 import 'package:neo_cafe_24/features/widgets/app_bar_button.dart';
@@ -11,7 +13,8 @@ import 'package:neo_cafe_24/features/widgets/custom_button.dart';
 import 'package:neo_cafe_24/features/widgets/opacity_button.dart';
 
 class OrderInfoScreen extends StatefulWidget {
-  const OrderInfoScreen({super.key});
+  final int tableNumber;
+  const OrderInfoScreen({super.key, required this.tableNumber});
 
   @override
   State<OrderInfoScreen> createState() => _OrderInfoScreenState();
@@ -20,19 +23,34 @@ class OrderInfoScreen extends StatefulWidget {
 class _OrderInfoScreenState extends State<OrderInfoScreen> {
   final int quantity = 1;
   @override
+  void initState() {
+    BlocProvider.of<OrderInfoBloc>(context).add(
+      GerOrderInfoEvent(tableNumber: widget.tableNumber),
+    );
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          appBar: _buildAppBar(),
-          body: _buildBody(context),
-        ),
-        _buildArrowBackButton(context)
-      ],
+    return BlocBuilder<OrderInfoBloc, OrderInfoState>(
+      builder: (context, state) {
+        if (state is OrderInfoLoaded) {
+          return Stack(
+            children: [
+              Scaffold(
+                appBar: _buildAppBar(state),
+                body: _buildBody(context, state),
+              ),
+              _buildArrowBackButton(context)
+            ],
+          );
+        }
+        return const SizedBox();
+      },
     );
   }
 
-  Padding _buildBody(BuildContext context) {
+  Padding _buildBody(BuildContext context, OrderInfoLoaded state) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -42,23 +60,24 @@ class _OrderInfoScreenState extends State<OrderInfoScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _buildOrderNumber(),
-              _buildOrderTime(),
+              _buildOrderNumber(state),
+              _buildOrderTime(state),
             ],
           ),
           const SizedBox(height: 16),
-          _buildOrderWaiter(),
+          _buildOrderWaiter(state),
           const SizedBox(height: 24),
-          _buildOrderStatus(),
+          _buildOrderStatus(state),
           const SizedBox(height: 16),
           Expanded(
             child: ListView.builder(
-              itemCount: 5,
-              itemBuilder: (context, index) => _buildOrderContainer(context),
+              itemCount: state.order.items.length,
+              itemBuilder: (context, index) =>
+                  _buildOrderContainer(context, state, index),
             ),
           ),
           const SizedBox(height: 12),
-          _buildTotalPrice(),
+          _buildTotalPrice(state),
           const SizedBox(height: 24),
           Row(
             children: [
@@ -101,7 +120,7 @@ class _OrderInfoScreenState extends State<OrderInfoScreen> {
     );
   }
 
-  Text _buildTotalPrice() {
+  Text _buildTotalPrice(OrderInfoLoaded state) {
     return Text.rich(
       TextSpan(
         children: [
@@ -112,7 +131,7 @@ class _OrderInfoScreenState extends State<OrderInfoScreen> {
             ),
           ),
           TextSpan(
-            text: '720 c',
+            text: '${state.order.totalSum} c',
             style: AppFonts.s20w600.copyWith(
               color: AppColors.orange,
             ),
@@ -122,7 +141,8 @@ class _OrderInfoScreenState extends State<OrderInfoScreen> {
     );
   }
 
-  Padding _buildOrderContainer(BuildContext context) {
+  Padding _buildOrderContainer(
+      BuildContext context, OrderInfoLoaded state, int index) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: OrderItemContainer(
@@ -132,52 +152,52 @@ class _OrderInfoScreenState extends State<OrderInfoScreen> {
             _showDeleteDialog(context);
           }
         },
-        name: 'Латте',
-        price: 100,
-        quantity: 1,
+        name: state.order.items[index].itemName,
+        price: state.order.items[index].totalPrice,
+        quantity: state.order.items[index].quantity,
       ),
     );
   }
 
-  InfoRow _buildOrderStatus() {
-    return const InfoRow(
+  InfoRow _buildOrderStatus(OrderInfoLoaded state) {
+    return InfoRow(
       color: AppColors.yellow,
-      name: 'В процессе',
+      name: state.order.orderStatus,
       style: AppFonts.s16w400,
     );
   }
 
-  Text _buildOrderWaiter() {
+  Text _buildOrderWaiter(OrderInfoLoaded state) {
     return Text(
-      'Официант: Александр',
+      'Официант: ${state.order.employee}',
       style: AppFonts.s16w600.copyWith(
         color: AppColors.black,
       ),
     );
   }
 
-  Text _buildOrderTime() {
+  Text _buildOrderTime(OrderInfoLoaded state) {
     return Text(
-      'Открыт в 18.02',
+      'Открыт в ${state.order.createdAt}',
       style: AppFonts.s14w400.copyWith(
         color: AppColors.secondGrey,
       ),
     );
   }
 
-  Text _buildOrderNumber() {
+  Text _buildOrderNumber(OrderInfoLoaded state) {
     return Text(
-      '№3134',
+      '№${state.order.orderNumber}',
       style: AppFonts.s14w400.copyWith(
         color: AppColors.secondGrey,
       ),
     );
   }
 
-  MyAppBar _buildAppBar() {
+  MyAppBar _buildAppBar(OrderInfoLoaded state) {
     return MyAppBar(
       title: Text(
-        'Стол №1',
+        'Стол ${state.order.table?.tableNumbe}',
         style: AppFonts.s24w600.copyWith(color: AppColors.black),
       ),
     );

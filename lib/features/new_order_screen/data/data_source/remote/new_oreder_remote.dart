@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:neo_cafe_24/features/new_order_screen/data/model/order_model/order_model.dart';
 
@@ -11,9 +13,11 @@ class NewOrderRemoteImpl implements NewOrderRemote {
   NewOrderRemoteImpl({required this.dio});
   @override
   Future<void> sendNewOrder(OrderModel order) async {
-    await dio.get(
+    final jsonData = order.toJson();
+   
+    await dio.post(
       '/orders/add/',
-      queryParameters: order.toJson(),
+      data: json.encode(jsonData),
       options: Options(
         extra: {"requiresToken": true},
       ),

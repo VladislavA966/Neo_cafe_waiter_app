@@ -5,10 +5,12 @@ class CustomTextField extends StatelessWidget {
   final String prefixImage;
   final String hintText;
   final TextEditingController controller;
+  final bool enabled;
   final String? errorText;
   const CustomTextField(
       {super.key,
       this.errorText,
+      this.enabled = true,
       required this.hintText,
       required this.prefixImage,
       required this.controller});
@@ -20,6 +22,7 @@ class CustomTextField extends StatelessWidget {
       child: TextField(
         controller: controller,
         decoration: InputDecoration(
+          enabled: enabled,
           filled: true,
           fillColor: AppColors.grey,
           contentPadding:

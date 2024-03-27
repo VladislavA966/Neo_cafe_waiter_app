@@ -27,8 +27,9 @@ class NewOrderRepositoryImpl implements NewOrderRepo {
     final items = await cartLocal.getItems();
     final orderItems = itemMapper.mapper(items);
     final branchId = await authLocal.getBranchId();
+    final tableModel = tableMapper.mapper(table);
     final order = OrderModel(
-      table: tableMapper.mapper(table),
+      table: tableModel,
       branch: branchId ?? 1,
       ito: orderItems,
     );
