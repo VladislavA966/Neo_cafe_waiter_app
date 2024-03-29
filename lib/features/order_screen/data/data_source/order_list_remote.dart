@@ -15,7 +15,12 @@ class OrdersListRomoteImpl implements OrdersListRemote {
   @override
   Future<List<OrderInfoModel>> getOrders() async {
     final branchId = await local.getBranchId();
-    final responce = await dio.get('/orders/all/$branchId/');
+    final responce = await dio.get(
+      '/orders/all/$branchId/',
+      options: Options(
+        extra: {"requiresToken": true},
+      ),
+    );
     List<dynamic> jsonData = responce.data;
     List<OrderInfoModel> orders = jsonData
         .map(

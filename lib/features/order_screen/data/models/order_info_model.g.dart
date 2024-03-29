@@ -20,10 +20,12 @@ OrderInfoModel _$OrderInfoModelFromJson(Map<String, dynamic> json) =>
       branch: json['branch'] as int?,
       orderType: json['order_type'] as String?,
       totalSum: json['total_sum'] as int?,
-      employee: EmployeModel.fromJson(
-          json['employee_profile'] as Map<String, dynamic>),
-      items: (json['ITO'] as List<dynamic>)
-          .map((e) => ItemToOrderModel.fromJson(e as Map<String, dynamic>))
+      employee: json['employee_profile'] == null
+          ? null
+          : EmployeModel.fromJson(
+              json['employee_profile'] as Map<String, dynamic>),
+      items: (json['ITO'] as List<dynamic>?)
+          ?.map((e) => ItemToOrderModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

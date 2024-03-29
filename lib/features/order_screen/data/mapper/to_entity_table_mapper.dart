@@ -6,10 +6,10 @@ class ToEntityTableMapper extends Mapper<TableModel, TableEntity> {
   @override
   TableEntity mapper(TableModel model) {
     return TableEntity(
-      id: model.id ?? 0,
-      tableNumbe: model.tableNumber ?? 0,
-      isAvailable: model.isAvailable ?? true,
-      branch: model.id ?? 0,
+      id: model.id,
+      tableNumbe: model.tableNumber,
+      isAvailable: model.isAvailable,
+      branch: model.id,
     );
   }
 }

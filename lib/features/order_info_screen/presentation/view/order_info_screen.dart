@@ -35,18 +35,36 @@ class _OrderInfoScreenState extends State<OrderInfoScreen> {
     return BlocBuilder<OrderInfoBloc, OrderInfoState>(
       builder: (context, state) {
         if (state is OrderInfoLoaded) {
-          return Stack(
-            children: [
-              Scaffold(
-                appBar: _buildAppBar(state),
-                body: _buildBody(context, state),
-              ),
-              _buildArrowBackButton(context)
-            ],
-          );
+          return _buildOrderInfoLoadedState(state, context);
+        } else if (state is OrderInfoLoading) {
+          return _buildOrderInfoLoadingState();
         }
         return const SizedBox();
       },
+    );
+  }
+
+  Stack _buildOrderInfoLoadedState(
+      OrderInfoLoaded state, BuildContext context) {
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: _buildAppBar(state),
+          body: _buildBody(context, state),
+        ),
+        _buildArrowBackButton(context)
+      ],
+    );
+  }
+
+  Scaffold _buildOrderInfoLoadingState() {
+    return const Scaffold(
+      appBar: MyAppBar(
+        title: Text(''),
+      ),
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 
@@ -169,7 +187,7 @@ class _OrderInfoScreenState extends State<OrderInfoScreen> {
 
   Text _buildOrderWaiter(OrderInfoLoaded state) {
     return Text(
-      'Официант: ${state.order.employee.username}',
+      'Официант: ${state.order.employee?.username}',
       style: AppFonts.s16w600.copyWith(
         color: AppColors.black,
       ),

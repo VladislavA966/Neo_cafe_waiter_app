@@ -52,7 +52,17 @@ class _SendCodeScreenState extends State<SendCodeScreen> {
         borderRadius: BorderRadius.circular(8),
       ),
     );
-
+    final errorPinTheme = PinTheme(
+      width: 40,
+      height: 52,
+      textStyle: const TextStyle(
+          fontSize: 20, color: Colors.red, fontWeight: FontWeight.w600),
+      decoration: BoxDecoration(
+        color: AppColors.grey,
+        border: Border.all(color: Colors.red),
+        borderRadius: BorderRadius.circular(8),
+      ),
+    );
     final focusedPinTheme = defaultPinTheme.copyDecorationWith(
       border: Border.all(
         color: AppColors.grey,
@@ -70,7 +80,12 @@ class _SendCodeScreenState extends State<SendCodeScreen> {
         Scaffold(
           appBar: _buildAppBar(),
           body: _buildBody(
-              defaultPinTheme, focusedPinTheme, submittedPinTheme, context),
+            defaultPinTheme,
+            focusedPinTheme,
+            submittedPinTheme,
+            errorPinTheme,
+            context,
+          ),
         ),
         _buildArrowBackButton(context),
       ],
@@ -93,17 +108,22 @@ class _SendCodeScreenState extends State<SendCodeScreen> {
     );
   }
 
-  Center _buildBody(PinTheme defaultPinTheme, PinTheme focusedPinTheme,
-      PinTheme submittedPinTheme, BuildContext context) {
+  Center _buildBody(
+      PinTheme defaultPinTheme,
+      PinTheme focusedPinTheme,
+      PinTheme submittedPinTheme,
+      PinTheme errorPinTheme,
+      BuildContext context) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
           children: [
             const SizedBox(height: 64),
-            _buildTitle(),
+            _buildTitle(codeController.text),
             const SizedBox(height: 16),
-            _buildPinPut(defaultPinTheme, focusedPinTheme, submittedPinTheme),
+            _buildPinPut(defaultPinTheme, focusedPinTheme, submittedPinTheme,
+                errorPinTheme),
             const SizedBox(height: 36),
             CustomButton(
               title: BlocConsumer<AuthBloc, AuthState>(
@@ -152,30 +172,52 @@ class _SendCodeScreenState extends State<SendCodeScreen> {
     }
   }
 
-  Pinput _buildPinPut(PinTheme defaultPinTheme, PinTheme focusedPinTheme,
-      PinTheme submittedPinTheme) {
-    return Pinput(
-      cursor: Container(
-        width: 20,
-        height: 2,
-        color: Colors.black,
-        margin: const EdgeInsets.only(top: 30),
-      ),
-      defaultPinTheme: defaultPinTheme,
-      focusedPinTheme: focusedPinTheme,
-      submittedPinTheme: submittedPinTheme,
-      controller: codeController,
-      pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-      showCursor: true,
-      onCompleted: (pin) => print(pin),
+  BlocBuilder _buildPinPut(PinTheme defaultPinTheme, PinTheme focusedPinTheme,
+      PinTheme submittedPinTheme, PinTheme errorPinTheme) {
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        PinTheme currentPintTheme = defaultPinTheme;
+        if (state is AuthError) {
+          currentPintTheme = errorPinTheme;
+        }
+
+        return Pinput(
+          cursor: Container(
+            width: 20,
+            height: 2,
+            color: Colors.black,
+            margin: const EdgeInsets.only(top: 30),
+          ),
+          defaultPinTheme: currentPintTheme,
+          focusedPinTheme: focusedPinTheme,
+          submittedPinTheme: submittedPinTheme,
+          errorPinTheme: errorPinTheme,
+          controller: codeController,
+          pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+          showCursor: true,
+        );
+      },
     );
   }
 
-  Text _buildTitle() {
-    return Text(
-      'Введите 4-х значный код,\n отправленный на почту\n${widget.email}',
-      textAlign: TextAlign.center,
-      style: AppFonts.s16w600,
+  BlocBuilder _buildTitle(String controller) {
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        if (state is AuthError) {
+          return Text(
+            'Код введен не верно\nпопробуйте еще раз',
+            textAlign: TextAlign.center,
+            style: AppFonts.s16w600.copyWith(
+              color: Colors.red,
+            ),
+          );
+        }
+        return Text(
+          'Введите 4-х значный код,\n отправленный на почту\n${widget.email}',
+          textAlign: TextAlign.center,
+          style: AppFonts.s16w600,
+        );
+      },
     );
   }
 

@@ -27,9 +27,9 @@ class OrderInfoModel {
   @JsonKey(name: "total_sum")
   final int? totalSum;
   @JsonKey(name: "employee_profile")
-  final EmployeModel employee;
+  final EmployeModel? employee;
   @JsonKey(name: "ITO")
-  final List<ItemToOrderModel> items;
+  final List<ItemToOrderModel>? items;
 
   factory OrderInfoModel.fromJson(Map<String, dynamic> json) =>
       _$OrderInfoModelFromJson(json);

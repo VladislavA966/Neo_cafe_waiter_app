@@ -27,14 +27,17 @@ class OrderToEntityMapper extends Mapper<OrderInfoModel, OrderInfoEntity> {
       branch: model.branch ?? 1,
       orderType: model.orderType ?? '',
       totalSum: model.totalSum ?? 0,
-      employee: employeMapper.mapper(model.employee),
-      items: model.items
-          .map(
-            (item) => itemMapper.mapper(
-              item,
-            ),
-          )
-          .toList(),
+      employee:
+          model.employee != null ? employeMapper.mapper(model.employee!) : null,
+      items: model.items != null
+          ? model.items!
+              .map(
+                (item) => itemMapper.mapper(
+                  item,
+                ),
+              )
+              .toList()
+          : [],
     );
   }
 }

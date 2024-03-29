@@ -11,7 +11,7 @@ class OrderInfoEntity {
   final int branch;
   final String orderType;
   final int totalSum;
-  final EmployeEntity employee;
+  final EmployeEntity? employee;
   final List<ItemToOrderEntity> items;
 
   OrderInfoEntity(

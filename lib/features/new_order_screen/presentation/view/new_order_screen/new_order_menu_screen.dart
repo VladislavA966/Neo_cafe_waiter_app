@@ -176,27 +176,31 @@ class _NewOrderMenuScreenState extends State<NewOrderMenuScreen> {
     );
   }
 
-  Expanded _buildButtonMenuList(MenuItemLoaded state) {
-    return Expanded(
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: state.model.length,
-        itemBuilder: (context, index) => Padding(
-          padding: const EdgeInsets.only(bottom: 12),
-          child: NewOrderMenuContainer(
-            iconButton: _buildIconButton(
-              context,
-              state.model[index].id,
-              state.model[index].name,
-              state.model[index].itemImage,
-              state.model[index].pricePerUnit,
+  Widget _buildButtonMenuList(MenuItemLoaded state) {
+    return state.model.isEmpty
+        ? const Center(
+            child: Text("В этой категории пока нет товаров", style: AppFonts.s14w400,),
+          )
+        : Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: state.model.length,
+              itemBuilder: (context, index) => Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: NewOrderMenuContainer(
+                  iconButton: _buildIconButton(
+                    context,
+                    state.model[index].id,
+                    state.model[index].name,
+                    state.model[index].itemImage,
+                    state.model[index].pricePerUnit,
+                  ),
+                  name: state.model[index].name,
+                  price: state.model[index].pricePerUnit,
+                ),
+              ),
             ),
-            name: state.model[index].name,
-            price: state.model[index].pricePerUnit,
-          ),
-        ),
-      ),
-    );
+          );
   }
 
   BlocBuilder _buildIconButton(
