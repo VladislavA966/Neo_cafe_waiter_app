@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:neo_cafe_24/features/new_order_screen/data/model/table_model/table_model.dart';
+import 'package:neo_cafe_24/features/order_screen/data/models/employe_model/employe_model.dart';
 
 part 'order_info_model.g.dart';
 
@@ -25,8 +26,8 @@ class OrderInfoModel {
   final String? orderType;
   @JsonKey(name: "total_sum")
   final int? totalSum;
-  @JsonKey(name: "employee")
-  final int? employee;
+  @JsonKey(name: "employee_profile")
+  final EmployeModel employee;
   @JsonKey(name: "ITO")
   final List<ItemToOrderModel> items;
 

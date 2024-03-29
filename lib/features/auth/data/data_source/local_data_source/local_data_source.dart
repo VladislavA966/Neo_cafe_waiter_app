@@ -1,5 +1,4 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:neo_cafe_24/features/auth/presentation/view/auth_screen.dart';
 
 class AuthDataSource {
   final _storage = const FlutterSecureStorage();
@@ -55,5 +54,9 @@ class AuthDataSource {
       return int.tryParse(userIdStr);
     }
     return null;
+  }
+
+  void clearAllUserData() async {
+    await _storage.deleteAll();
   }
 }

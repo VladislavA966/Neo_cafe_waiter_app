@@ -24,6 +24,7 @@ import 'package:neo_cafe_24/features/new_order_screen/domain/use_case/cart_use_c
 import 'package:neo_cafe_24/features/new_order_screen/domain/use_case/current_table_use_case.dart';
 import 'package:neo_cafe_24/features/new_order_screen/domain/use_case/order_use_case.dart';
 import 'package:neo_cafe_24/features/order_screen/data/data_source/order_list_remote.dart';
+import 'package:neo_cafe_24/features/order_screen/data/mapper/to_entity_employe_mapper.dart';
 import 'package:neo_cafe_24/features/order_screen/data/mapper/to_entity_item_mapper.dart';
 import 'package:neo_cafe_24/features/order_screen/data/mapper/to_entity_order_mapper.dart';
 import 'package:neo_cafe_24/features/order_screen/data/mapper/to_entity_table_mapper.dart';
@@ -227,11 +228,13 @@ void mappers() {
   getIt.registerSingleton<ToEntityItemMapper>(
     ToEntityItemMapper(),
   );
+  getIt.registerSingleton<EmployeMapper>(EmployeMapper());
   getIt.registerSingleton<ToEntityTableMapper>(
     ToEntityTableMapper(),
   );
   getIt.registerSingleton<OrderToEntityMapper>(
     OrderToEntityMapper(
+      employeMapper: getIt<EmployeMapper>(),
       itemMapper: getIt<ToEntityItemMapper>(),
       tableMapper: getIt<ToEntityTableMapper>(),
     ),

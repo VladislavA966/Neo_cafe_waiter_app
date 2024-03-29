@@ -3,13 +3,13 @@ part 'table_model.g.dart';
 
 @JsonSerializable()
 class TableModel {
-  final int? id;
+  final int id;
   @JsonKey(name: "table_number")
-  final int? tableNumber;
+  final int tableNumber;
   @JsonKey(name: "is_available")
-  final bool? isAvailable;
+  final bool isAvailable;
   @JsonKey(name: "branch")
-  final int? branch;
+  final int branch;
 
   factory TableModel.fromJson(Map<String, dynamic> json) =>
       _$TableModelFromJson(json);

@@ -20,7 +20,8 @@ OrderInfoModel _$OrderInfoModelFromJson(Map<String, dynamic> json) =>
       branch: json['branch'] as int?,
       orderType: json['order_type'] as String?,
       totalSum: json['total_sum'] as int?,
-      employee: json['employee'] as int?,
+      employee: EmployeModel.fromJson(
+          json['employee_profile'] as Map<String, dynamic>),
       items: (json['ITO'] as List<dynamic>)
           .map((e) => ItemToOrderModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -38,7 +39,7 @@ Map<String, dynamic> _$OrderInfoModelToJson(OrderInfoModel instance) =>
       'branch': instance.branch,
       'order_type': instance.orderType,
       'total_sum': instance.totalSum,
-      'employee': instance.employee,
+      'employee_profile': instance.employee,
       'ITO': instance.items,
     };
 

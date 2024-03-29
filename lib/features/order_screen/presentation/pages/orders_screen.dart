@@ -386,16 +386,14 @@ class _TablesBodyState extends State<TablesBody> {
 
   TableContainer _buildTableContainer(TableLoaded state, int index) {
     return TableContainer(
-      onTap: () => state.tables[index].isAvailable
-          ? null
-          : _goToTableOrderInfoScreen(state, index),
+      onTap: () => _goToTableOrderInfoScreen(state, index),
       tableNumber: state.tables[index].tableNumbe,
       isAvailable: state.tables[index].isAvailable,
     );
   }
 
   void _goToTableOrderInfoScreen(TableLoaded state, int index) {
-    if (state.tables[index].isAvailable) {
+    if (!state.tables[index].isAvailable) {
       Navigator.push(
         context,
         MaterialPageRoute(

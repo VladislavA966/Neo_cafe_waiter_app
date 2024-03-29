@@ -125,7 +125,7 @@ class _OrderInfoScreenState extends State<OrderInfoScreen> {
       TextSpan(
         children: [
           TextSpan(
-            text: 'Итог:',
+            text: 'Итог: ',
             style: AppFonts.s16w600.copyWith(
               color: AppColors.black,
             ),
@@ -169,7 +169,7 @@ class _OrderInfoScreenState extends State<OrderInfoScreen> {
 
   Text _buildOrderWaiter(OrderInfoLoaded state) {
     return Text(
-      'Официант: ${state.order.employee}',
+      'Официант: ${state.order.employee.username}',
       style: AppFonts.s16w600.copyWith(
         color: AppColors.black,
       ),

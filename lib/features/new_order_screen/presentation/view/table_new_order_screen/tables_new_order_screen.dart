@@ -213,7 +213,7 @@ class TableContainer extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 21),
           clipBehavior: Clip.antiAlias,
           decoration: ShapeDecoration(
-            color: isAvailable ? AppColors.grey : AppColors.green,
+            color: isAvailable ? AppColors.green : AppColors.grey,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),

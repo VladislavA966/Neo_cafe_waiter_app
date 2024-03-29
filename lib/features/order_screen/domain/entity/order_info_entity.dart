@@ -11,7 +11,7 @@ class OrderInfoEntity {
   final int branch;
   final String orderType;
   final int totalSum;
-  final int employee;
+  final EmployeEntity employee;
   final List<ItemToOrderEntity> items;
 
   OrderInfoEntity(
@@ -43,4 +43,10 @@ class ItemToOrderEntity {
     required this.quantity,
     required this.totalPrice,
   });
+}
+
+class EmployeEntity {
+  final String username;
+
+  EmployeEntity({required this.username});
 }

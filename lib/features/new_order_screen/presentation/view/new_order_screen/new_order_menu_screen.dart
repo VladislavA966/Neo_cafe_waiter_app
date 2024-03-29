@@ -170,7 +170,9 @@ class _NewOrderMenuScreenState extends State<NewOrderMenuScreen> {
   Future<dynamic> orderModal(BuildContext context) {
     return showModalBottomSheet(
       context: context,
-      builder: (context) => const OrderSummaryModal(),
+      builder: (context) => OrderSummaryModal(
+        table: widget.table,
+      ),
     );
   }
 
@@ -226,7 +228,7 @@ class _NewOrderMenuScreenState extends State<NewOrderMenuScreen> {
 
   Text _buildTableNumberTitle() {
     return Text(
-      'Стол №2',
+      'Стол №${widget.table.tableNumbe}',
       style: AppFonts.s16w600.copyWith(
         color: AppColors.black,
       ),

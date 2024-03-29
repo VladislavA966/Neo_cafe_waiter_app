@@ -44,5 +44,8 @@ abstract class AppFonts {
   static const TextStyle s24w500 =
       TextStyle(fontSize: 24, fontWeight: FontWeight.w500);
 
-  static const TextStyle s48w400 = TextStyle(fontSize: 48, fontWeight: FontWeight.w400);    
+  static const TextStyle s48w400 = TextStyle(
+    fontSize: 48,
+    fontWeight: FontWeight.w400,
+  );
 }
