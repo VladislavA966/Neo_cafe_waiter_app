@@ -18,31 +18,26 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  List<CustomRow> rows = const [
-    CustomRow(image: AppImages.dayImage, title: 'Дневная смена'),
-    CustomRow(image: AppImages.night, title: 'Ночная смена'),
-    CustomRow(image: AppImages.minus, title: 'Выходной'),
-  ];
   void showLogOutDialog() {
     showDialog(
       context: context,
       builder: (context) {
         return LogountModalWindow(
-          acceptTap: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const AuthScreen(),
-              ),
-              (Route<dynamic> route) => false,
-            );
-          },
+          acceptTap: () => _acceptTap(context),
           title: 'Уверены, что хотите\nвыйти?',
-          declineTap: () {
-            Navigator.pop(context);
-          },
+          declineTap: () => Navigator.pop(context),
         );
       },
+    );
+  }
+
+  void _acceptTap(BuildContext context) {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const AuthScreen(),
+      ),
+      (Route<dynamic> route) => false,
     );
   }
 
@@ -67,12 +62,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           body: BlocBuilder<ProfileBloc, ProfileState>(
             builder: (context, state) {
               if (state is ProfileLoading) {
-                print(state);
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return _buildProfileLoadingState();
               } else if (state is ProfileLoaded) {
-                print(state);
                 return _buildBody(state);
               }
               return const SizedBox();
@@ -82,6 +73,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _buildArrowBackButton(context),
         _buildLogoutButton(context)
       ],
+    );
+  }
+
+  Center _buildProfileLoadingState() {
+    return const Center(
+      child: CircularProgressIndicator(),
     );
   }
 
@@ -97,21 +94,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 40),
           _buildWorkingTime(),
           const SizedBox(height: 20),
-          Expanded(
-            child: ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: state.profile.employeeSchedules.length,
-              itemBuilder: (context, index) {
-                return Text(
-                  '${state.profile.employeeSchedules[index].day}: ${state.profile.employeeSchedules[index].startTime} - ${state.profile.employeeSchedules[index].endTime}',
-                  style: AppFonts.s16w400.copyWith(
-                    color: AppColors.black,
-                  ),
-                );
-              },
-            ),
-          ),
+          _scheduleListViewBuilder(state),
         ],
+      ),
+    );
+  }
+
+  Expanded _scheduleListViewBuilder(ProfileLoaded state) {
+    return Expanded(
+      child: ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: state.profile.employeeSchedules.length,
+        itemBuilder: (context, index) {
+          return _buildSchedule(state, index);
+        },
+      ),
+    );
+  }
+
+  Text _buildSchedule(ProfileLoaded state, int index) {
+    return Text(
+      '${state.profile.employeeSchedules[index].day}: ${state.profile.employeeSchedules[index].startTime} - ${state.profile.employeeSchedules[index].endTime}',
+      style: AppFonts.s16w400.copyWith(
+        color: AppColors.black,
       ),
     );
   }
@@ -178,30 +183,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         onPressed: navigatorPop,
       ),
-    );
-  }
-}
-
-class CustomRow extends StatelessWidget {
-  final String image;
-  final String title;
-  const CustomRow({
-    super.key,
-    required this.image,
-    required this.title,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Image.asset(image),
-        const SizedBox(width: 10),
-        Text(
-          title,
-          style: AppFonts.s16w500,
-        )
-      ],
     );
   }
 }

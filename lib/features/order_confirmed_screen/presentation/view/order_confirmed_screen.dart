@@ -51,20 +51,22 @@ class _OrderConfirmedScreenState extends State<OrderConfirmedScreen> {
 
   CustomButton _buildButton() {
     return CustomButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const HomePage(),
-          ),
-        );
-      },
+      onPressed: () => _goToHomePage(),
       height: 54,
       title: Text(
         'Перейти к заказам',
         style: AppFonts.s16w600.copyWith(
           color: Colors.white,
         ),
+      ),
+    );
+  }
+
+  void _goToHomePage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const HomePage(),
       ),
     );
   }
@@ -101,19 +103,22 @@ Positioned _buildNotificationButton(BuildContext context) {
     top: 65,
     right: 16,
     child: AppBarButton(
-        color: AppColors.blue,
-        icon: const Icon(
-          Icons.notifications_none,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const NotificationsScreen(),
-            ),
-          );
-        }),
+      color: AppColors.blue,
+      icon: const Icon(
+        Icons.notifications_none,
+        color: Colors.white,
+      ),
+      onPressed: () => _goToNotificationScreen(context),
+    ),
+  );
+}
+
+void _goToNotificationScreen(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const NotificationsScreen(),
+    ),
   );
 }
 
@@ -122,18 +127,21 @@ Positioned _buildAppBarProfileTap(BuildContext context) {
     top: 65,
     left: 16,
     child: AppBarButton(
-        color: AppColors.blue,
-        icon: Image.asset(
-          AppImages.profileTap,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const ProfileScreen(),
-            ),
-          );
-        }),
+      color: AppColors.blue,
+      icon: Image.asset(
+        AppImages.profileTap,
+        color: Colors.white,
+      ),
+      onPressed: () => _goToProfileScreen(context),
+    ),
+  );
+}
+
+void _goToProfileScreen(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const ProfileScreen(),
+    ),
   );
 }

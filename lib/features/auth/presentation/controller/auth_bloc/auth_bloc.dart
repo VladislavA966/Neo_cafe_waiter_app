@@ -45,15 +45,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> with ValidationMixin {
 
   Future<void> _getAuthEvent(
       GetAuthEvent event, Emitter<AuthState> emit) async {
-    // if (!validateLogin(event.login)) {
-    //   emit(
-    //     LoginValidationError(errorText: 'Поле не может быть пустным'),
-    //   );
-    //   return;
-    // } else if (!validatePassword(event.password)) {
-    //   emit(PasswordValidationError(errorText: 'Поле не может быть пустным'));
-    //   return;
-    // }
     emit(AuthLoading());
     try {
       final email = await authUseCase.call(

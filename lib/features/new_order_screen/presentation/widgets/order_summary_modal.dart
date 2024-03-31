@@ -59,93 +59,11 @@ class OrderSummaryModal extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: state.items.length,
-                      itemBuilder: (context, index) => OrderItemContainer(
-                        quantity: state.items[index].quantity,
-                        name: state.items[index].name,
-                        price: state.items[index].price,
-                        onMinusTap: () {
-                          bloc.add(
-                            CartItemRemoved(
-                              state.items[index].id,
-                            ),
-                          );
-                        },
-                        onPlusTap: () {
-                          bloc.add(
-                            CartItemAdded(
-                              CartItemEntity(
-                                id: state.items[index].id,
-                                image: state.items[index].image,
-                                name: state.items[index].name,
-                                price: state.items[index].price,
-                                quantity: state.items[index].quantity,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ),
+                  _buildItemListViewBuilder(state, bloc),
                   const SizedBox(height: 8),
-                  Text(
-                    'Итого: $total c',
-                    style: AppFonts.s16w600.copyWith(
-                      color: Colors.white,
-                    ),
-                  ),
+                  _buildTotalPrice(total),
                   const SizedBox(height: 16),
-                  CustomButton(
-                    color: AppColors.orange,
-                    onPressed: () {
-                      if (orderState is NewOrderLoading) {
-                        return null;
-                      }
-                      BlocProvider.of<NewOrderBloc>(context).add(
-                        SendNewOrderEvent(
-                          table: table,
-                        ),
-                      );
-                    },
-                    height: 54,
-                    title: BlocConsumer<NewOrderBloc, NewOrderState>(
-                      listener: (context, state) {
-                        if (state is NewOrderLoaded) {
-                          Navigator.pop(context);
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const OrderConfirmedScreen(),
-                            ),
-                          );
-                          BlocProvider.of<CartBloc>(context).add(
-                            CleanCartEvent(),
-                          );
-                        } else if (state is NewOrderError) {
-                          Navigator.pop(context);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const ErrorScreen(),
-                            ),
-                          );
-                        }
-                      },
-                      builder: (context, state) {
-                        if (state is NewOrderLoading) {
-                          return const CircularProgressIndicator();
-                        }
-                        return Text(
-                          'Заказать',
-                          style: AppFonts.s16w600.copyWith(color: Colors.white),
-                        );
-                      },
-                    ),
-                  ),
+                  _buildCustomButton(orderState, context),
                   const SizedBox(height: 16),
                 ],
               );
@@ -154,6 +72,120 @@ class OrderSummaryModal extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+
+  CustomButton _buildCustomButton(
+      NewOrderState orderState, BuildContext context) {
+    return CustomButton(
+      color: AppColors.orange,
+      onPressed: () {
+        if (orderState is NewOrderLoading) {
+          return null;
+        }
+        BlocProvider.of<NewOrderBloc>(context).add(
+          SendNewOrderEvent(
+            table: table,
+          ),
+        );
+      },
+      height: 54,
+      title: BlocConsumer<NewOrderBloc, NewOrderState>(
+        listener: (context, state) {
+          if (state is NewOrderLoaded) {
+            _newOrderLoaded(context);
+          } else if (state is NewOrderError) {
+            _newOrderError(context);
+          }
+        },
+        builder: (context, state) {
+          if (state is NewOrderLoading) {
+            return _newOrderLoadingBuilder();
+          }
+          return Text(
+            'Заказать',
+            style: AppFonts.s16w600.copyWith(color: Colors.white),
+          );
+        },
+      ),
+    );
+  }
+
+  CircularProgressIndicator _newOrderLoadingBuilder() {
+     return const CircularProgressIndicator();
+  }
+
+  void _newOrderError(BuildContext context) {
+    Navigator.pop(context);
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const ErrorScreen(),
+      ),
+      (Route<dynamic> route) => false,
+    );
+  }
+
+  void _newOrderLoaded(BuildContext context) {
+    Navigator.pop(context);
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const OrderConfirmedScreen(),
+      ),
+      (Route<dynamic> route) => false,
+    );
+    BlocProvider.of<CartBloc>(context).add(
+      CleanCartEvent(),
+    );
+  }
+
+  Expanded _buildItemListViewBuilder(CartLoadSuccess state, CartBloc bloc) {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: state.items.length,
+        itemBuilder: (context, index) =>
+            _buildItemOrderContainer(state, index, bloc),
+      ),
+    );
+  }
+
+  Text _buildTotalPrice(double total) {
+    return Text(
+      'Итого: $total c',
+      style: AppFonts.s16w600.copyWith(
+        color: Colors.white,
+      ),
+    );
+  }
+
+  OrderItemContainer _buildItemOrderContainer(
+      CartLoadSuccess state, int index, CartBloc bloc) {
+    return OrderItemContainer(
+      quantity: state.items[index].quantity,
+      name: state.items[index].name,
+      price: state.items[index].price,
+      onMinusTap: () {
+        bloc.add(
+          CartItemRemoved(
+            state.items[index].id,
+          ),
+        );
+      },
+      onPlusTap: () {
+        bloc.add(
+          CartItemAdded(
+            CartItemEntity(
+              id: state.items[index].id,
+              image: state.items[index].image,
+              name: state.items[index].name,
+              price: state.items[index].price,
+              quantity: state.items[index].quantity,
+            ),
+          ),
+        );
+      },
     );
   }
 }

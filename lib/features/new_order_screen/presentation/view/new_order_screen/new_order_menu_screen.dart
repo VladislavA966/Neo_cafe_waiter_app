@@ -178,29 +178,45 @@ class _NewOrderMenuScreenState extends State<NewOrderMenuScreen> {
 
   Widget _buildButtonMenuList(MenuItemLoaded state) {
     return state.model.isEmpty
-        ? const Center(
-            child: Text("В этой категории пока нет товаров", style: AppFonts.s14w400,),
-          )
-        : Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: state.model.length,
-              itemBuilder: (context, index) => Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: NewOrderMenuContainer(
-                  iconButton: _buildIconButton(
-                    context,
-                    state.model[index].id,
-                    state.model[index].name,
-                    state.model[index].itemImage,
-                    state.model[index].pricePerUnit,
-                  ),
-                  name: state.model[index].name,
-                  price: state.model[index].pricePerUnit,
-                ),
-              ),
-            ),
-          );
+        ? _buildEmptyCatagoryList()
+        : _newOrderMenuContainerList(state);
+  }
+
+  Center _buildEmptyCatagoryList() {
+    return const Center(
+      child: Text(
+        "В этой категории пока нет товаров",
+        style: AppFonts.s14w400,
+      ),
+    );
+  }
+
+  Expanded _newOrderMenuContainerList(MenuItemLoaded state) {
+    return Expanded(
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: state.model.length,
+        itemBuilder: (context, index) => Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: _buildNewOrderMenuContainer(context, state, index),
+        ),
+      ),
+    );
+  }
+
+  NewOrderMenuContainer _buildNewOrderMenuContainer(
+      BuildContext context, MenuItemLoaded state, int index) {
+    return NewOrderMenuContainer(
+      iconButton: _buildIconButton(
+        context,
+        state.model[index].id,
+        state.model[index].name,
+        state.model[index].itemImage,
+        state.model[index].pricePerUnit,
+      ),
+      name: state.model[index].name,
+      price: state.model[index].pricePerUnit,
+    );
   }
 
   BlocBuilder _buildIconButton(
@@ -208,25 +224,29 @@ class _NewOrderMenuScreenState extends State<NewOrderMenuScreen> {
     return BlocBuilder<CartBloc, CartState>(
       builder: (context, state) {
         if (state is CartLoadSuccess) {
-          final currentItem =
-              state.items.firstWhereOrNull((item) => item.id == id);
-          final itemCount = currentItem?.quantity ?? 0;
-          return GestureDetector(
-            onTap: () {
-              if (itemCount == 0) {
-                addItemToCart(id, name, image, price, 1);
-              } else {
-                removeItemFromCart(currentItem?.id ?? 1);
-              }
-            },
-            child: Icon(
-              itemCount == 0 ? Icons.add : Icons.remove,
-              color: AppColors.blue,
-            ),
-          );
+          return _buildCartLoadedState(state, id, name, image, price);
         }
         return const SizedBox();
       },
+    );
+  }
+
+  GestureDetector _buildCartLoadedState(CartLoadSuccess state, int id, String name, String image, int price) {
+       final currentItem =
+        state.items.firstWhereOrNull((item) => item.id == id);
+    final itemCount = currentItem?.quantity ?? 0;
+    return GestureDetector(
+      onTap: () {
+        if (itemCount == 0) {
+          addItemToCart(id, name, image, price, 1);
+        } else {
+          removeItemFromCart(currentItem?.id ?? 1);
+        }
+      },
+      child: Icon(
+        itemCount == 0 ? Icons.add : Icons.remove,
+        color: AppColors.blue,
+      ),
     );
   }
 
@@ -247,37 +267,45 @@ class _NewOrderMenuScreenState extends State<NewOrderMenuScreen> {
 
   Widget _categoryList(context, state) {
     if (state is CategoryAllLoaded) {
-      return SizedBox(
-        height: 38,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: state.model.length,
-          itemBuilder: (context, index) {
-            final categoryId = state.model[index].id;
-            Color textColor =
-                selectedId == categoryId ? Colors.white : Colors.black;
-            Color buttonColor =
-                selectedId == categoryId ? AppColors.orange : AppColors.grey;
-            return Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: GestureDetector(
-                onTap: () {
-                  _onCategorySelected(categoryId);
-                },
-                child: ToggleButton(
-                  textColor: textColor,
-                  buttonColor: buttonColor,
-                  name: state.model[index].name,
-                ),
-              ),
-            );
-          },
-        ),
-      );
+      return _categoryLoaded(state);
     } else if (state is CategoryAllError) {
       Text(state.errorText);
     }
     return const SizedBox();
+  }
+
+  SizedBox _categoryLoaded(CategoryAllLoaded state) {
+    return SizedBox(
+      height: 38,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: state.model.length,
+        itemBuilder: (context, index) {
+          final categoryId = state.model[index].id;
+          Color textColor =
+              selectedId == categoryId ? Colors.white : Colors.black;
+          Color buttonColor =
+              selectedId == categoryId ? AppColors.orange : AppColors.grey;
+          return _categoryButton(categoryId, textColor, buttonColor, state, index);
+        },
+      ),
+    );
+  }
+
+  Padding _categoryButton(int categoryId, Color textColor, Color buttonColor, CategoryAllLoaded state, int index) {
+    return Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: GestureDetector(
+              onTap: () {
+                _onCategorySelected(categoryId);
+              },
+              child: ToggleButton(
+                textColor: textColor,
+                buttonColor: buttonColor,
+                name: state.model[index].name,
+              ),
+            ),
+          );
   }
 }
 

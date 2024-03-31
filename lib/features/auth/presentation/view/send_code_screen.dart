@@ -29,6 +29,10 @@ class _SendCodeScreenState extends State<SendCodeScreen> {
           );
   }
 
+  void prevScreen() {
+    Navigator.pop(context);
+  }
+
   void goToNextScreen() {
     Navigator.push(
       context,
@@ -103,7 +107,7 @@ class _SendCodeScreenState extends State<SendCodeScreen> {
           size: 16,
           color: Colors.white,
         ),
-        onPressed: goToNextScreen,
+        onPressed: prevScreen,
       ),
     );
   }
@@ -163,11 +167,10 @@ class _SendCodeScreenState extends State<SendCodeScreen> {
 
   void _authListener(context, state) {
     if (state is CodeLoaded) {
-      Navigator.push(
+      Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(
-          builder: (context) => const HomePage(),
-        ),
+        MaterialPageRoute(builder: (context) => const HomePage()),
+        (Route<dynamic> route) => false,
       );
     }
   }

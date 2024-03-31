@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
 import 'package:neo_cafe_24/core/recources/app_images.dart';
-import 'package:neo_cafe_24/features/new_order_screen/domain/entity/table_entity.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/view/new_order_screen/new_order_menu_screen.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/view/table_new_order_screen/bloc/table_bloc.dart';
 import 'package:neo_cafe_24/features/new_order_screen/presentation/widgets/info_row.dart';
+import 'package:neo_cafe_24/features/new_order_screen/presentation/widgets/table_container.dart';
 import 'package:neo_cafe_24/features/notifications_screen/presentation/view/notifications_screen.dart';
 import 'package:neo_cafe_24/features/profile/presentation/view/profile_screen.dart';
 import 'package:neo_cafe_24/features/widgets/app_bar_button.dart';
@@ -20,15 +20,19 @@ class NewOrderTableScreen extends StatefulWidget {
 }
 
 class _NewOrderTableScreenState extends State<NewOrderTableScreen> {
-  void goToCreateNewOrder(TableEntity table) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => NewOrderMenuScreen(
-          table: table,
+  void goToCreateNewOrder(TableLoaded state, int index) {
+    if (state.tables[index].isAvailable) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => NewOrderMenuScreen(
+            table: state.tables[index],
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      null;
+    }
   }
 
   @override
@@ -82,31 +86,39 @@ class _NewOrderTableScreenState extends State<NewOrderTableScreen> {
           const SizedBox(height: 24),
           _buildInfoTablesRow(),
           const SizedBox(height: 32),
-          Expanded(
-            child: GridView.builder(
-              shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 0,
-                mainAxisSpacing: 0,
-                childAspectRatio: (childAspectRatio),
-              ),
-              itemCount: state.tables.length,
-              itemBuilder: (BuildContext context, int index) {
-                return TableContainer(
-                  onTap: () {
-                    goToCreateNewOrder(
-                      state.tables[index],
-                    );
-                  },
-                  tableNumber: state.tables[index].tableNumbe,
-                  isAvailable: state.tables[index].isAvailable,
-                );
-              },
-            ),
-          ),
+          _buildTablesGrid(childAspectRatio, state),
         ],
       ),
+    );
+  }
+
+  Expanded _buildTablesGrid(double childAspectRatio, TableLoaded state) {
+    return Expanded(
+      child: GridView.builder(
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          crossAxisSpacing: 0,
+          mainAxisSpacing: 0,
+          childAspectRatio: (childAspectRatio),
+        ),
+        itemCount: state.tables.length,
+        itemBuilder: (BuildContext context, int index) =>
+            _buildTableContainer(state, index),
+      ),
+    );
+  }
+
+  TableContainer _buildTableContainer(TableLoaded state, int index) {
+    return TableContainer(
+      onTap: () {
+        goToCreateNewOrder(
+          state,
+          index,
+        );
+      },
+      tableNumber: state.tables[index].tableNumbe,
+      isAvailable: state.tables[index].isAvailable,
     );
   }
 
@@ -149,19 +161,22 @@ Positioned _buildNotificationButton(BuildContext context) {
     top: 65,
     right: 16,
     child: AppBarButton(
-        color: AppColors.blue,
-        icon: const Icon(
-          Icons.notifications_none,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const NotificationsScreen(),
-            ),
-          );
-        }),
+      color: AppColors.blue,
+      icon: const Icon(
+        Icons.notifications_none,
+        color: Colors.white,
+      ),
+      onPressed: () => _goToNotificationsScreen(context),
+    ),
+  );
+}
+
+void _goToNotificationsScreen(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const NotificationsScreen(),
+    ),
   );
 }
 
@@ -170,62 +185,21 @@ Positioned _buildAppBarProfileTap(BuildContext context) {
     top: 65,
     left: 16,
     child: AppBarButton(
-        color: AppColors.blue,
-        icon: Image.asset(
-          AppImages.profileTap,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const ProfileScreen(),
-            ),
-          );
-        }),
+      color: AppColors.blue,
+      icon: Image.asset(
+        AppImages.profileTap,
+        color: Colors.white,
+      ),
+      onPressed: () => _goToProfileScreen(context),
+    ),
   );
 }
 
-class TableContainer extends StatelessWidget {
-  final Function()? onTap;
-  final int tableNumber;
-  final bool isAvailable;
-
-  const TableContainer(
-      {super.key,
-      required this.onTap,
-      required this.tableNumber,
-      required this.isAvailable});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: 4,
-        right: 4,
-        bottom: 8,
-      ),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          width: double.infinity,
-          height: 100,
-          padding: const EdgeInsets.symmetric(vertical: 21),
-          clipBehavior: Clip.antiAlias,
-          decoration: ShapeDecoration(
-            color: isAvailable ? AppColors.green : AppColors.grey,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          child: Center(
-            child: Text(
-              "$tableNumber",
-              style: AppFonts.s48w400,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+void _goToProfileScreen(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const ProfileScreen(),
+    ),
+  );
 }
