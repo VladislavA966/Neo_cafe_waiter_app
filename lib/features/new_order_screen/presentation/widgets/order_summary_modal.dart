@@ -25,6 +25,63 @@ class OrderSummaryModal extends StatelessWidget {
     return total;
   }
 
+  void _addItem(CartBloc bloc, CartLoadSuccess state, int index) {
+    bloc.add(
+      CartItemAdded(
+        CartItemEntity(
+          id: state.items[index].id,
+          image: state.items[index].image,
+          name: state.items[index].name,
+          price: state.items[index].price,
+          quantity: state.items[index].quantity,
+        ),
+      ),
+    );
+  }
+
+  void _newOrderError(BuildContext context) {
+    Navigator.pop(context);
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const ErrorScreen(),
+      ),
+      (Route<dynamic> route) => false,
+    );
+  }
+
+  void _newOrderLoaded(BuildContext context) {
+    Navigator.pop(context);
+
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const OrderConfirmedScreen(),
+      ),
+      (Route<dynamic> route) => false,
+    );
+    BlocProvider.of<CartBloc>(context).add(
+      CleanCartEvent(),
+    );
+  }
+
+  void _removeItem(
+      CartLoadSuccess state, int index, CartBloc bloc, BuildContext context) {
+    if (state.items[index].quantity == 1) {
+      bloc.add(
+        CartItemRemoved(
+          state.items[index].id,
+        ),
+      );
+      Navigator.pop(context);
+    }
+    bloc.add(
+      CartItemRemoved(
+        state.items[index].id,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final orderState = context.read<NewOrderBloc>().state;
@@ -46,30 +103,39 @@ class OrderSummaryModal extends StatelessWidget {
           builder: (context, state) {
             if (state is CartLoadSuccess) {
               final total = calculateTotal(state);
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 32),
-                  Center(
-                    child: Text(
-                      'Заказ №1',
-                      style: AppFonts.s24w600.copyWith(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  _buildItemListViewBuilder(state, bloc),
-                  const SizedBox(height: 8),
-                  _buildTotalPrice(total),
-                  const SizedBox(height: 16),
-                  _buildCustomButton(orderState, context),
-                  const SizedBox(height: 16),
-                ],
-              );
+              return _cartLoadSuccess(state, bloc, total, orderState, context);
             }
             return const SizedBox();
           },
+        ),
+      ),
+    );
+  }
+
+  Column _cartLoadSuccess(CartLoadSuccess state, CartBloc bloc, double total,
+      NewOrderState orderState, BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 32),
+        _buildTableTitle(),
+        const SizedBox(height: 24),
+        _buildItemListViewBuilder(state, bloc),
+        const SizedBox(height: 8),
+        _buildTotalPrice(total),
+        const SizedBox(height: 16),
+        _buildCustomButton(orderState, context),
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Center _buildTableTitle() {
+    return Center(
+      child: Text(
+        'Заказ №1',
+        style: AppFonts.s24w600.copyWith(
+          color: Colors.white,
         ),
       ),
     );
@@ -112,33 +178,7 @@ class OrderSummaryModal extends StatelessWidget {
   }
 
   CircularProgressIndicator _newOrderLoadingBuilder() {
-     return const CircularProgressIndicator();
-  }
-
-  void _newOrderError(BuildContext context) {
-    Navigator.pop(context);
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const ErrorScreen(),
-      ),
-      (Route<dynamic> route) => false,
-    );
-  }
-
-  void _newOrderLoaded(BuildContext context) {
-    Navigator.pop(context);
-
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const OrderConfirmedScreen(),
-      ),
-      (Route<dynamic> route) => false,
-    );
-    BlocProvider.of<CartBloc>(context).add(
-      CleanCartEvent(),
-    );
+    return const CircularProgressIndicator();
   }
 
   Expanded _buildItemListViewBuilder(CartLoadSuccess state, CartBloc bloc) {
@@ -146,7 +186,7 @@ class OrderSummaryModal extends StatelessWidget {
       child: ListView.builder(
         itemCount: state.items.length,
         itemBuilder: (context, index) =>
-            _buildItemOrderContainer(state, index, bloc),
+            _buildItemOrderContainer(state, index, bloc, context),
       ),
     );
   }
@@ -161,31 +201,13 @@ class OrderSummaryModal extends StatelessWidget {
   }
 
   OrderItemContainer _buildItemOrderContainer(
-      CartLoadSuccess state, int index, CartBloc bloc) {
+      CartLoadSuccess state, int index, CartBloc bloc, BuildContext context) {
     return OrderItemContainer(
       quantity: state.items[index].quantity,
       name: state.items[index].name,
       price: state.items[index].price,
-      onMinusTap: () {
-        bloc.add(
-          CartItemRemoved(
-            state.items[index].id,
-          ),
-        );
-      },
-      onPlusTap: () {
-        bloc.add(
-          CartItemAdded(
-            CartItemEntity(
-              id: state.items[index].id,
-              image: state.items[index].image,
-              name: state.items[index].name,
-              price: state.items[index].price,
-              quantity: state.items[index].quantity,
-            ),
-          ),
-        );
-      },
+      onMinusTap: () => _removeItem(state, index, bloc, context),
+      onPlusTap: () => _addItem(bloc, state, index),
     );
   }
 }

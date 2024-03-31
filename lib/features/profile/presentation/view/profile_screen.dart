@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:neo_cafe_24/core/di/dependency_injection.dart';
 import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/core/recources/app_fonts.dart';
 import 'package:neo_cafe_24/core/recources/app_images.dart';
+import 'package:neo_cafe_24/features/auth/data/data_source/local_data_source/local_data_source.dart';
 import 'package:neo_cafe_24/features/auth/presentation/view/auth_screen.dart';
+import 'package:neo_cafe_24/features/new_order_screen/presentation/controller/cart_bloc/cart_bloc.dart';
 import 'package:neo_cafe_24/features/profile/presentation/view/bloc/profile_bloc.dart';
 import 'package:neo_cafe_24/features/profile/presentation/widgets/log_out_dialog.dart';
 import 'package:neo_cafe_24/features/widgets/app_bar_button.dart';
@@ -31,7 +34,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  final authData = getIt<AuthDataSource>();
+
   void _acceptTap(BuildContext context) {
+    authData.clearAllUserData();
+    BlocProvider.of<CartBloc>(context).add(
+      CleanCartEvent(),
+    );
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
