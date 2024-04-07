@@ -7,9 +7,11 @@ class OrderContainer extends StatelessWidget {
   final int tableNumber;
   final String orderNumber;
   final String createdAt;
+  final Function()? onTap;
   const OrderContainer({
     super.key,
     required this.status,
+    this.onTap,
     required this.createdAt,
     required this.orderNumber,
     required this.tableNumber,

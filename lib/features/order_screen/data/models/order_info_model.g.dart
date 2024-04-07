@@ -22,7 +22,7 @@ OrderInfoModel _$OrderInfoModelFromJson(Map<String, dynamic> json) =>
       totalSum: json['total_sum'] as int?,
       employee: json['employee_profile'] == null
           ? null
-          : EmployeModel.fromJson(
+          : EmployeeModel.fromJson(
               json['employee_profile'] as Map<String, dynamic>),
       items: (json['ITO'] as List<dynamic>?)
           ?.map((e) => ItemToOrderModel.fromJson(e as Map<String, dynamic>))

@@ -89,21 +89,29 @@ class _NewOrderMenuScreenState extends State<NewOrderMenuScreen> {
 
   Widget _menuItemBuilder(context, state) {
     if (state is MenuItemLoaded) {
-      return Scaffold(
-        appBar: _buildAppBar(),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: _buildBody(state),
-        ),
-      );
+      return _menuItemLoadedState(state);
     } else if (state is MenuItemLoading) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
+      return _menuItemLoadingState();
     }
     return const SizedBox();
+  }
+
+  Scaffold _menuItemLoadingState() {
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  Scaffold _menuItemLoadedState(MenuItemLoaded state) {
+    return Scaffold(
+      appBar: _buildAppBar(),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: _buildBody(state),
+      ),
+    );
   }
 
   Column _buildBody(MenuItemLoaded state) {
@@ -131,9 +139,7 @@ class _NewOrderMenuScreenState extends State<NewOrderMenuScreen> {
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: CustomButton(
                 color: AppColors.orange,
-                onPressed: () {
-                  orderModal(context);
-                },
+                onPressed: () => orderModal(context),
                 height: 56,
                 orderTitle: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -231,23 +237,27 @@ class _NewOrderMenuScreenState extends State<NewOrderMenuScreen> {
     );
   }
 
-  GestureDetector _buildCartLoadedState(CartLoadSuccess state, int id, String name, String image, int price) {
-       final currentItem =
-        state.items.firstWhereOrNull((item) => item.id == id);
+  GestureDetector _buildCartLoadedState(
+      CartLoadSuccess state, int id, String name, String image, int price) {
+    final currentItem = state.items.firstWhereOrNull((item) => item.id == id);
     final itemCount = currentItem?.quantity ?? 0;
     return GestureDetector(
-      onTap: () {
-        if (itemCount == 0) {
-          addItemToCart(id, name, image, price, 1);
-        } else {
-          removeItemFromCart(currentItem?.id ?? 1);
-        }
-      },
+      onTap: () => _addOrRemoveItemFromCart(
+          itemCount, id, name, image, price, currentItem),
       child: Icon(
         itemCount == 0 ? Icons.add : Icons.remove,
         color: AppColors.blue,
       ),
     );
+  }
+
+  void _addOrRemoveItemFromCart(int itemCount, int id, String name,
+      String image, int price, CartItemEntity? currentItem) {
+    if (itemCount == 0) {
+      addItemToCart(id, name, image, price, 1);
+    } else {
+      removeItemFromCart(currentItem?.id ?? 1);
+    }
   }
 
   Text _buildTableNumberTitle() {
@@ -280,32 +290,32 @@ class _NewOrderMenuScreenState extends State<NewOrderMenuScreen> {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: state.model.length,
-        itemBuilder: (context, index) {
-          final categoryId = state.model[index].id;
-          Color textColor =
-              selectedId == categoryId ? Colors.white : Colors.black;
-          Color buttonColor =
-              selectedId == categoryId ? AppColors.orange : AppColors.grey;
-          return _categoryButton(categoryId, textColor, buttonColor, state, index);
-        },
+        itemBuilder: (context, index) => _buildCategoryButton(state, index),
       ),
     );
   }
 
-  Padding _categoryButton(int categoryId, Color textColor, Color buttonColor, CategoryAllLoaded state, int index) {
+  Padding _buildCategoryButton(CategoryAllLoaded state, int index) {
+    final categoryId = state.model[index].id;
+    Color textColor = selectedId == categoryId ? Colors.white : Colors.black;
+    Color buttonColor =
+        selectedId == categoryId ? AppColors.orange : AppColors.grey;
+    return _categoryButton(categoryId, textColor, buttonColor, state, index);
+  }
+
+  Padding _categoryButton(int categoryId, Color textColor, Color buttonColor,
+      CategoryAllLoaded state, int index) {
     return Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: GestureDetector(
-              onTap: () {
-                _onCategorySelected(categoryId);
-              },
-              child: ToggleButton(
-                textColor: textColor,
-                buttonColor: buttonColor,
-                name: state.model[index].name,
-              ),
-            ),
-          );
+      padding: const EdgeInsets.only(right: 10),
+      child: GestureDetector(
+        onTap: () => _onCategorySelected(categoryId),
+        child: ToggleButton(
+          textColor: textColor,
+          buttonColor: buttonColor,
+          name: state.model[index].name,
+        ),
+      ),
+    );
   }
 }
 
@@ -314,14 +324,13 @@ Positioned _buildAppBarProfileTap(BuildContext context) {
     top: 65,
     left: 16,
     child: AppBarButton(
-        color: AppColors.blue,
-        icon: const Icon(
-          Icons.arrow_back_ios_new_outlined,
-          color: AppColors.textWhite,
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        }),
+      color: AppColors.blue,
+      icon: const Icon(
+        Icons.arrow_back_ios_new_outlined,
+        color: AppColors.textWhite,
+      ),
+      onPressed: () => Navigator.pop(context),
+    ),
   );
 }
 

@@ -7,19 +7,23 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final bool enabled;
   final String? errorText;
-  const CustomTextField(
-      {super.key,
-      this.errorText,
-      this.enabled = true,
-      required this.hintText,
-      required this.prefixImage,
-      required this.controller});
+  final TextInputType? keyboardType;
+  const CustomTextField({
+    super.key,
+    this.errorText,
+    this.enabled = true,
+    this.keyboardType,
+    required this.hintText,
+    required this.prefixImage,
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 80,
       child: TextField(
+        keyboardType: keyboardType,
         controller: controller,
         decoration: InputDecoration(
           enabled: enabled,

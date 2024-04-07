@@ -99,7 +99,7 @@ class _OrderInfoScreenState extends State<OrderInfoScreen> {
           const SizedBox(height: 24),
           Row(
             children: [
-              _cloceOrderButton(context),
+              _closeOrderButton(context),
               const SizedBox(width: 7),
               _buildAddItemsButton()
             ],
@@ -123,7 +123,7 @@ class _OrderInfoScreenState extends State<OrderInfoScreen> {
     );
   }
 
-  Expanded _cloceOrderButton(BuildContext context) {
+  Expanded _closeOrderButton(BuildContext context) {
     return Expanded(
       child: OpacityButton(
         borderColor: AppColors.blue,
@@ -226,16 +226,19 @@ class _OrderInfoScreenState extends State<OrderInfoScreen> {
       top: 64,
       left: 22,
       child: AppBarButton(
-          color: AppColors.blue,
-          icon: const Icon(
-            Icons.arrow_back_ios_new,
-            size: 16,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          }),
+        color: AppColors.blue,
+        icon: const Icon(
+          Icons.arrow_back_ios_new,
+          size: 16,
+          color: Colors.white,
+        ),
+        onPressed: () => _navigateBackPage(context),
+      ),
     );
+  }
+
+  void _navigateBackPage(BuildContext context) {
+    Navigator.pop(context);
   }
 }
 

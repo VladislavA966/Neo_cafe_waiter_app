@@ -43,8 +43,7 @@ class _NewOrderTableScreenState extends State<NewOrderTableScreen> {
     super.initState();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  double get childAspectRetio {
     double screenWidth = MediaQuery.of(context).size.width;
     double padding = 16.0 * 2;
     double spacing = 10.0;
@@ -55,6 +54,11 @@ class _NewOrderTableScreenState extends State<NewOrderTableScreen> {
     double itemHeight = 200.0;
 
     double childAspectRatio = itemWidth / itemHeight;
+    return childAspectRatio;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Stack(
       children: [
         Scaffold(
@@ -62,7 +66,7 @@ class _NewOrderTableScreenState extends State<NewOrderTableScreen> {
           body: BlocBuilder<TableBloc, TableState>(
             builder: (context, state) {
               if (state is TableLoaded) {
-                return _buildBody(context, childAspectRatio, state);
+                return _buildBody(context, childAspectRetio, state);
               }
               return const SizedBox();
             },
@@ -100,7 +104,7 @@ class _NewOrderTableScreenState extends State<NewOrderTableScreen> {
           crossAxisCount: 3,
           crossAxisSpacing: 0,
           mainAxisSpacing: 0,
-          childAspectRatio: (childAspectRatio),
+          childAspectRatio: childAspectRatio,
         ),
         itemCount: state.tables.length,
         itemBuilder: (BuildContext context, int index) =>

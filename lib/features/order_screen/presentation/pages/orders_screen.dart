@@ -20,22 +20,42 @@ class OrdersScreen extends StatefulWidget {
 }
 
 class _OrdersScreenState extends State<OrdersScreen> {
-  int? currentIndex = 0;
+  final _pageController = PageController();
+  int currentIndex = 0;
   List<List<Color>> get acticeColors => const [
         [AppColors.orange],
         [AppColors.orange],
       ];
-  void _currentIndexTap(index) {
-    currentIndex = index;
-    setState(() {});
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _currentIndexTap(int? index) {
+    _pageController.animateToPage(
+      index ?? 0,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
   void initState() {
+    super.initState();
     BlocProvider.of<AllOrdersBloc>(context).add(
       GetAllOrders(),
     );
-    super.initState();
+
+    _pageController.addListener(() {
+      final pageIndex = _pageController.page?.round();
+      if (pageIndex != null && pageIndex != currentIndex) {
+        setState(() {
+          currentIndex = pageIndex;
+        });
+      }
+    });
   }
 
   @override
@@ -44,11 +64,26 @@ class _OrdersScreenState extends State<OrdersScreen> {
       children: [
         Scaffold(
           appBar: _buildAppBar(),
-          body: currentIndex == 0 ? const TablesBody() : const OrdersBody(),
+          body: _buildPageViewBody(),
         ),
         _buildAppBarProfileTap(context),
         _buildNotificationButton(context),
         _buildToggleButtons(),
+      ],
+    );
+  }
+
+  PageView _buildPageViewBody() {
+    return PageView(
+      controller: _pageController,
+      onPageChanged: (index) {
+        setState(() {
+          currentIndex = index;
+        });
+      },
+      children: const [
+        TablesBody(),
+        OrdersBody(),
       ],
     );
   }
@@ -70,7 +105,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
           totalSwitches: 2,
           labels: const ['Столы', 'Заказы'],
           radiusStyle: true,
-          onToggle: _currentIndexTap,
+          onToggle: (index) => _currentIndexTap(index),
         ),
       ),
     );

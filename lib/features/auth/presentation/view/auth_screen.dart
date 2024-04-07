@@ -66,9 +66,7 @@ class _AuthScreenState extends State<AuthScreen> {
         listener: _authListener,
         builder: _authBuilder,
       ),
-      onPressed: () {
-        authEvent();
-      },
+      onPressed: () => authEvent(),
       height: 48,
     );
   }
@@ -122,6 +120,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   CustomTextField _buildNameTextField() {
     return CustomTextField(
+      keyboardType: TextInputType.emailAddress,
       errorText: errorText,
       hintText: _loginHint,
       prefixImage: AppImages.profileTap,

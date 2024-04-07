@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:neo_cafe_24/core/recources/app_colors.dart';
 import 'package:neo_cafe_24/features/error_screen/error_screen.dart';
+import 'package:neo_cafe_24/features/order_info_screen/presentation/view/order_info_screen.dart';
 import 'package:neo_cafe_24/features/order_screen/presentation/controller/bloc/all_orders_bloc.dart';
 import 'package:neo_cafe_24/features/order_screen/presentation/widgets/order_container.dart';
 import 'package:neo_cafe_24/features/order_screen/presentation/widgets/toggle_button.dart';
@@ -16,6 +17,27 @@ class OrdersBody extends StatefulWidget {
 class _OrdersBodyState extends State<OrdersBody> {
   List<String> buttonNames = ['Все', 'Новые', 'В процессе', 'Готово'];
   int? selectedIndex = 0;
+  void _toggleButtonTap(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
+    final status = _getStatusFromIndex(index);
+    context.read<AllOrdersBloc>().add(FilterOrdersByStatus(status));
+  }
+
+  String _getStatusFromIndex(int index) {
+    switch (index) {
+      case 1:
+        return "Новые";
+      case 2:
+        return "В процессе";
+      case 3:
+        return "Готово";
+      default:
+        return "Все";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<AllOrdersBloc, AllOrdersState>(
@@ -29,17 +51,9 @@ class _OrdersBodyState extends State<OrdersBody> {
           return _buildLoadingState();
         } else if (state is AllOrdersLoaded) {
           return _buildLoadedState(state);
-        } else if (state is AllOrdersError) {
-          return _buildErrorState(state);
         }
         return const SizedBox();
       },
-    );
-  }
-
-  Center _buildErrorState(AllOrdersError state) {
-    return Center(
-      child: Text(state.errorText),
     );
   }
 
@@ -57,7 +71,12 @@ class _OrdersBodyState extends State<OrdersBody> {
     );
   }
 
-  Expanded _itemsListViewBuilder(AllOrdersLoaded state) {
+  Widget _itemsListViewBuilder(AllOrdersLoaded state) {
+    if (state.orders.isEmpty) {
+      return const Center(
+        child: Text("В этой категории нет заказов"),
+      );
+    }
     return Expanded(
       child: ListView.builder(
         shrinkWrap: true,
@@ -84,10 +103,22 @@ class _OrdersBodyState extends State<OrdersBody> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: OrderContainer(
+        onTap: () => _goToOrderInfo(state, index),
         status: state.orders[index].orderStatus,
         createdAt: state.orders[index].createdAt,
         orderNumber: state.orders[index].orderType,
         tableNumber: state.orders[index].table?.tableNumbe ?? 0,
+      ),
+    );
+  }
+
+  void _goToOrderInfo(AllOrdersLoaded state, int index) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OrderInfoScreen(
+          tableNumber: state.orders[index].table?.tableNumbe ?? 0,
+        ),
       ),
     );
   }
@@ -107,11 +138,6 @@ class _OrdersBodyState extends State<OrdersBody> {
         ),
       ),
     );
-  }
-
-  void _toggleButtonTap(index) {
-    selectedIndex = index;
-    setState(() {});
   }
 
   Center _buildLoadingState() {

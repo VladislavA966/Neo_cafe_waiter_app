@@ -27,7 +27,7 @@ class OrderInfoModel {
   @JsonKey(name: "total_sum")
   final int? totalSum;
   @JsonKey(name: "employee_profile")
-  final EmployeModel? employee;
+  final EmployeeModel? employee;
   @JsonKey(name: "ITO")
   final List<ItemToOrderModel>? items;
 

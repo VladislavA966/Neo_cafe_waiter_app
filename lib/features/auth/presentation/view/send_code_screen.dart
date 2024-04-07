@@ -191,6 +191,7 @@ class _SendCodeScreenState extends State<SendCodeScreen> {
             color: Colors.black,
             margin: const EdgeInsets.only(top: 30),
           ),
+          keyboardType: TextInputType.number,
           defaultPinTheme: currentPintTheme,
           focusedPinTheme: focusedPinTheme,
           submittedPinTheme: submittedPinTheme,
@@ -198,6 +199,7 @@ class _SendCodeScreenState extends State<SendCodeScreen> {
           controller: codeController,
           pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
           showCursor: true,
+          onCompleted: (value) => _sendCodeEvent,
         );
       },
     );

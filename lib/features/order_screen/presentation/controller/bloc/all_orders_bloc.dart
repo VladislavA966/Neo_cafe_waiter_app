@@ -8,27 +8,44 @@ part 'all_orders_event.dart';
 part 'all_orders_state.dart';
 
 class AllOrdersBloc extends Bloc<AllOrdersEvent, AllOrdersState> {
+  List<OrderInfoEntity> _allOrders = [];
   final OrdersListUseCase ordersUseCase;
   AllOrdersBloc(this.ordersUseCase) : super(AllOrdersInitial()) {
-    on<GetAllOrders>((event, emit) async {
-      emit(AllOrdersLoading());
-      try {
-        final orders = await ordersUseCase(
-          NoParams(),
-        );
-        emit(
-          AllOrdersLoaded(
-            orders: orders,
-          ),
-        );
-      } catch (e) {
-        emit(
-          AllOrdersError(
-            errorText: e.toString(),
-          ),
-        );
-        print(e.toString());
-      }
-    });
+    on<GetAllOrders>(getAllOrders);
+    on<FilterOrdersByStatus>(filterOrdersByStatus);
+  }
+
+  
+  void getAllOrders(GetAllOrders event, Emitter<AllOrdersState> emit) async {
+    emit(AllOrdersLoading());
+    try {
+      final orders = await ordersUseCase(
+        NoParams(),
+      );
+      _allOrders = orders;
+      emit(
+        AllOrdersLoaded(
+          orders: orders,
+        ),
+      );
+    } catch (e) {
+      emit(
+        AllOrdersError(
+          errorText: e.toString(),
+        ),
+      );
+    }
+  }
+
+  void filterOrdersByStatus(
+      FilterOrdersByStatus event, Emitter<AllOrdersState> emit) {
+    if (event.status == "Все") {
+      emit(AllOrdersLoaded(orders: _allOrders));
+    } else {
+      final filteredOrders = _allOrders
+          .where((order) => order.orderStatus == event.status)
+          .toList();
+      emit(AllOrdersLoaded(orders: filteredOrders));
+    }
   }
 }

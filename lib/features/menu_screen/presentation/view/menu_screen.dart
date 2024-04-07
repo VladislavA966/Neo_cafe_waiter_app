@@ -82,59 +82,72 @@ class _MenuScreenState extends State<MenuScreen> {
 
   Widget _buildCategories(context, state) {
     if (state is CategoryAllLoaded) {
-      return SizedBox(
-        height: 38,
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: state.model.length,
-          itemBuilder: (context, index) {
-            final categoryId = state.model[index].id;
-            Color textColor =
-                selectedId == categoryId ? Colors.white : Colors.black;
-            Color buttonColor =
-                selectedId == categoryId ? AppColors.orange : AppColors.grey;
-            return Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: GestureDetector(
-                onTap: () {
-                  _onCategorySelected(categoryId);
-                },
-                child: ToggleButton(
-                  textColor: textColor,
-                  buttonColor: buttonColor,
-                  name: state.model[index].name,
-                ),
-              ),
-            );
-          },
-        ),
-      );
+      return _categoryAllLoadedState(state);
     } else if (state is CategoryAllError) {
       Text(state.errorText);
     }
     return const SizedBox();
   }
 
+  SizedBox _categoryAllLoadedState(CategoryAllLoaded state) {
+    return SizedBox(
+      height: 38,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: state.model.length,
+        itemBuilder: (context, index) {
+          return _buildCategoryButton(state, index);
+        },
+      ),
+    );
+  }
+
+  Padding _buildCategoryButton(CategoryAllLoaded state, int index) {
+    final categoryId = state.model[index].id;
+    Color textColor = selectedId == categoryId ? Colors.white : Colors.black;
+    Color buttonColor =
+        selectedId == categoryId ? AppColors.orange : AppColors.grey;
+    return Padding(
+      padding: const EdgeInsets.only(right: 10),
+      child: GestureDetector(
+        onTap: () => _onCategorySelected(categoryId),
+        child: ToggleButton(
+          textColor: textColor,
+          buttonColor: buttonColor,
+          name: state.model[index].name,
+        ),
+      ),
+    );
+  }
+
   Widget _menuBuilder(context, state) {
     if (state is MenuItemLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return _menuItemLoadingState();
     } else if (state is MenuItemLoaded) {
-      return Expanded(
-        child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: state.model.length,
-          itemBuilder: (context, index) => Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: MenuContainer(
-                name: state.model[index].name,
-                price: state.model[index].pricePerUnit),
-          ),
-        ),
-      );
+      return _menuItemLoadedState(state);
     }
     return const SizedBox();
+  }
+
+  Expanded _menuItemLoadedState(MenuItemLoaded state) {
+    return Expanded(
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: state.model.length,
+        itemBuilder: (context, index) => Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: MenuContainer(
+              name: state.model[index].name,
+              price: state.model[index].pricePerUnit),
+        ),
+      ),
+    );
+  }
+
+  Center _menuItemLoadingState() {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
   }
 }
 
@@ -143,19 +156,22 @@ Positioned _buildNotificationButton(BuildContext context) {
     top: 65,
     right: 16,
     child: AppBarButton(
-        color: AppColors.blue,
-        icon: const Icon(
-          Icons.notifications_none,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const NotificationsScreen(),
-            ),
-          );
-        }),
+      color: AppColors.blue,
+      icon: const Icon(
+        Icons.notifications_none,
+        color: Colors.white,
+      ),
+      onPressed: () => _goToNotificationsScreen(context),
+    ),
+  );
+}
+
+void _goToNotificationsScreen(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const NotificationsScreen(),
+    ),
   );
 }
 
@@ -164,19 +180,22 @@ Positioned _buildAppBarProfileTap(BuildContext context) {
     top: 65,
     left: 16,
     child: AppBarButton(
-        color: AppColors.blue,
-        icon: Image.asset(
-          AppImages.profileTap,
-          color: Colors.white,
-        ),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const ProfileScreen(),
-            ),
-          );
-        }),
+      color: AppColors.blue,
+      icon: Image.asset(
+        AppImages.profileTap,
+        color: Colors.white,
+      ),
+      onPressed: () => _goToProfileScreen(context),
+    ),
+  );
+}
+
+void _goToProfileScreen(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const ProfileScreen(),
+    ),
   );
 }
 
